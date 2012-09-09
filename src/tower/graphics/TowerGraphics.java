@@ -60,7 +60,7 @@ public class TowerGraphics {
                 if (e.getButton() == MouseEvent.BUTTON3 && !buildingPlacementIntent.isActive) {
                     jPanel.add(genericPopup);
                     genericPopup.show(jPanel, e.getX(), e.getY());
-                } else if (e.getButton() == MouseEvent.BUTTON1 && buildingPlacementIntent.isActive) {
+                } else if (e.getButton() == MouseEvent.BUTTON1 && buildingPlacementIntent.isActive && buildingPlacementIntent.isValidPlacement) {
                     buildingPlacementIntent.isActive = false;
                     drawer.removeActiveIntent(buildingPlacementIntent);
                     localMap.addBuilding(buildingFactory.createByName(buildingPlacementIntent.name, GridCoord.fromPixels(e.getX(), e.getY())));
@@ -93,6 +93,9 @@ public class TowerGraphics {
             public void mouseMoved(MouseEvent e) {
                 drawer.mouseX = e.getX();
                 drawer.mouseY = e.getY();
+                if (buildingPlacementIntent.isActive) {
+                    buildingPlacementIntent.updateValidity(GridCoord.fromPixels(e.getX(), e.getY()), localMap.getBuildings());
+                }
             }
         };
 
