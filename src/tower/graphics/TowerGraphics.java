@@ -14,8 +14,12 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -54,7 +58,7 @@ public class TowerGraphics {
 
         drawer = new Drawer(localMap);
         jPanel.add(drawer);
-        MouseListener listener = new MouseListener() {
+        MouseAdapter listener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3 && !buildingPlacementIntent.isActive) {
@@ -66,29 +70,20 @@ public class TowerGraphics {
                     localMap.addBuilding(buildingFactory.createByName(buildingPlacementIntent.name, GridCoord.fromPixels(e.getX(), e.getY())));
                 }
             }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
         };
 
-        MouseMotionListener motionListener = new MouseMotionListener() {
+        jPanel.addKeyListener(new KeyAdapter() {
             @Override
-            public void mouseDragged(MouseEvent e) {
+            public void keyPressed(KeyEvent e) {
+                if (buildingPlacementIntent.isActive && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    buildingPlacementIntent.isActive = false;
+                    drawer.removeActiveIntent(buildingPlacementIntent);
+                }
             }
+        });
 
+
+        MouseMotionAdapter motionListener = new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 drawer.mouseX = e.getX();
@@ -113,6 +108,9 @@ public class TowerGraphics {
                     }
                 }
         );
+
+        jPanel.setFocusable(true);
+        jPanel.requestFocusInWindow();
 
         jFrame.setVisible(true);
         jPanel.setVisible(true);
