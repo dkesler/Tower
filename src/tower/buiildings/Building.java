@@ -1,5 +1,7 @@
 package tower.buiildings;
 
+import tower.grid.GridCoord;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -8,15 +10,11 @@ import java.awt.image.BufferedImageOp;
 
 public class Building {
 
-    public static final int UNIT_SIZE = 64;
+    final private BuildingPrototype prototype;
+    final private GridCoord gridCoord;
 
-    final BuildingPrototype prototype;
-    final int x;
-    final int y;
-
-    public Building(BuildingPrototype prototype, int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Building(BuildingPrototype prototype, GridCoord gridCoord) {
+        this.gridCoord = gridCoord;
         this.prototype = prototype;
     }
 
@@ -27,8 +25,8 @@ public class Building {
                         AffineTransform.getScaleInstance(.25, .25),
                         AffineTransformOp.TYPE_NEAREST_NEIGHBOR
                 ),
-                x*UNIT_SIZE,
-                y*UNIT_SIZE
+                gridCoord.xPixels,
+                gridCoord.yPixels
         );
     }
 

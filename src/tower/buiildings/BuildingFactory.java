@@ -2,10 +2,12 @@ package tower.buiildings;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import tower.grid.GridCoord;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,16 +30,25 @@ public class BuildingFactory {
         }
     }
 
-    public Building createByName(String name, int x, int y) {
-        if (!prototypes.containsKey(name)) {
-            throw new RuntimeException("No building prototype for [" + name  + "]");
-        }
+    public Building createByName(String name, GridCoord gridCoord) {
+        BuildingPrototype prototype = getPrototype(name);
 
         return new Building(
-                prototypes.get(name),
-                x,
-                y
+                prototype,
+                gridCoord
         );
+    }
+
+    public BuildingPrototype getPrototype(String name) {
+        if (!prototypes.containsKey(name)) {
+            throw new RuntimeException("No building prototype for [" + name + "]");
+        }
+
+        return prototypes.get(name);
+    }
+
+    public Collection<String> getBuildingNames() {
+        return prototypes.keySet();
     }
 
     private void addPrototypeFromFile(File buildingFile) {
