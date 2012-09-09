@@ -17,6 +17,7 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -38,6 +39,8 @@ public class TowerGraphics {
     final private DestroyBuildingIntent destroyBuildingIntent = new DestroyBuildingIntent();
     final private Drawer drawer;
     final private Camera camera;
+
+    Point dragStart;
 
     public TowerGraphics(final LocalMap localMap, final BuildingFactory buildingFactory) {
         jFrame = new JFrame("Tower");
@@ -125,6 +128,30 @@ public class TowerGraphics {
                     localMap.addBuilding(buildingFactory.createByName(buildingPlacementIntent.name, camera.convertEventToGrid(e)));
                 }
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    dragStart = e.getPoint();
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                double tx = e.getX() - dragStart.getX();
+                double ty = e.getY() - dragStart.getY();
+                dragStart = e.getPoint();
+                camera.scroll(tx, ty);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                GridCoord mouseCoord = camera.convertEventToGrid(e);
+                drawer.mouseCoord = mouseCoord;
+                if (buildingPlacementIntent.isActive) {
+                    buildingPlacementIntent.updateValidity(mouseCoord, localMap.getBuildings());
+                }
+            }
         };
 
         jPanel.addKeyListener(new KeyAdapter() {
@@ -137,24 +164,14 @@ public class TowerGraphics {
             }
         });
 
-        MouseMotionAdapter motionListener = new MouseMotionAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                GridCoord mouseCoord = camera.convertEventToGrid(e);
-                drawer.mouseCoord = mouseCoord;
-                if (buildingPlacementIntent.isActive) {
-                    buildingPlacementIntent.updateValidity(mouseCoord, localMap.getBuildings());
-                }
-            }
-        };
-
         jPanel.addMouseListener(listener);
-        jPanel.addMouseMotionListener(motionListener);
+        jPanel.addMouseMotionListener(listener);
+
         jPanel.addMouseWheelListener(
                 new MouseAdapter() {
                     @Override
                     public void mouseWheelMoved(MouseWheelEvent e) {
-                        camera.zoom(-e.getWheelRotation());
+                        camera.zoom(e.getWheelRotation());
                     }
                 }
         );

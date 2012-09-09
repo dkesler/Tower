@@ -13,9 +13,17 @@ import java.util.EventObject;
 
 public class Camera {
     private double zoom = 4;
+    private int scrollX = 0;
+    private int scrollY = 0;
 
     private final static double MIN_ZOOM = 1;
     private final static double MAX_ZOOM = 10;
+
+    private final static int MAX_SCROLL_X = 0;
+    private final static int MAX_SCROLL_Y = 0;
+    private final static int MIN_SCROLL_X = -2000;
+    private final static int MIN_SCROLL_Y = -2000;
+
 
     public GridCoord convertEventToGrid(MouseEvent e) {
 
@@ -31,6 +39,7 @@ public class Camera {
 
     public AffineTransform getCameraTransform() {
         AffineTransform affineTransform = new AffineTransform();
+        affineTransform.translate(scrollX, scrollY);
         affineTransform.scale(4 / zoom, 4 / zoom);
         return affineTransform;
     }
@@ -39,5 +48,16 @@ public class Camera {
         zoom += amountToZoom;
         if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
         if (zoom < MIN_ZOOM) zoom = MIN_ZOOM;
+    }
+
+    public void scroll(double x, double y) {
+        scrollX += x;
+        scrollY += y;
+
+        if (scrollX > MAX_SCROLL_X) scrollX = MAX_SCROLL_X;
+        if (scrollX < MIN_SCROLL_X) scrollX = MIN_SCROLL_X;
+
+        if (scrollY > MAX_SCROLL_Y) scrollY = MAX_SCROLL_Y;
+        if (scrollY < MIN_SCROLL_Y) scrollY = MIN_SCROLL_Y;
     }
 }
