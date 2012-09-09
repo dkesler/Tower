@@ -1,26 +1,31 @@
 package tower.graphics;
 
+import tower.buiildings.Building;
 import tower.buiildings.BuildingFactory;
 import tower.controls.BuildingPlacementIntent;
+import tower.controls.DestroyBuildingIntent;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -28,8 +33,10 @@ public class TowerGraphics {
 
     final private JFrame jFrame;
     final private JPanel jPanel;
-    final private PopupMenu genericPopup;
+    final private JMenu createBuildingMenu;
+    final private JMenu destroyBuildingMenu;
     final private BuildingPlacementIntent buildingPlacementIntent = new BuildingPlacementIntent();
+    final private DestroyBuildingIntent destroyBuildingIntent = new DestroyBuildingIntent();
     final private Drawer drawer;
 
     public TowerGraphics(final LocalMap localMap, final BuildingFactory buildingFactory) {
@@ -39,10 +46,10 @@ public class TowerGraphics {
 
        jPanel = new JPanel(new BorderLayout());
 
-        genericPopup = new PopupMenu();
+        createBuildingMenu = new JMenu();
         for (final String building : buildingFactory.getBuildingNames()) {
-            MenuItem menuItem = new MenuItem(building);
-            genericPopup.add(menuItem);
+            JMenuItem menuItem = new JMenuItem(building);
+            createBuildingMenu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -54,16 +61,61 @@ public class TowerGraphics {
             });
         }
 
+        destroyBuildingMenu = new JMenu();
+
         jFrame.add(jPanel);
+        jPanel.add(createBuildingMenu);
+        jPanel.add(destroyBuildingMenu);
+
+        final ActionListener destroyBuildingActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                localMap.removeBuilding(destroyBuildingIntent.building);
+                destroyBuildingIntent.isActive = false;
+                drawer.removeActiveIntent(destroyBuildingIntent);
+            }
+        };
 
         drawer = new Drawer(localMap);
         jPanel.add(drawer);
         MouseAdapter listener = new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3 && !buildingPlacementIntent.isActive) {
-                    jPanel.add(genericPopup);
-                    genericPopup.show(jPanel, e.getX(), e.getY());
+            public void mouseClicked(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    final Building selected = localMap.getBuildingAt(GridCoord.fromPixels(e.getX(), e.getY()));
+                    if (selected != null) {
+                        destroyBuildingIntent.isActive = true;
+                        destroyBuildingIntent.building = selected;
+                        destroyBuildingMenu.removeAll();
+                        JMenuItem jMenuItem = new JMenuItem("Destroy " + selected.getName());
+                        jMenuItem.addActionListener(destroyBuildingActionListener);
+                        destroyBuildingMenu.add(jMenuItem);
+
+                        drawer.addActiveIntent(destroyBuildingIntent);
+
+                        JPopupMenu destroyPopup = destroyBuildingMenu.getPopupMenu();
+                        destroyPopup.addPopupMenuListener(new PopupMenuListener() {
+                            @Override
+                            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            }
+
+                            @Override
+                            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                            }
+
+                            @Override
+                            public void popupMenuCanceled(PopupMenuEvent e) {
+                                drawer.removeActiveIntent(destroyBuildingIntent);
+                                destroyBuildingIntent.isActive = false;
+                            }
+                        });
+
+                        destroyPopup.show(jPanel, e.getX(), e.getY());
+
+
+                    } else if (!buildingPlacementIntent.isActive) {
+                        createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
+                    }
                 } else if (e.getButton() == MouseEvent.BUTTON1 && buildingPlacementIntent.isActive && buildingPlacementIntent.isValidPlacement) {
                     buildingPlacementIntent.isActive = false;
                     drawer.removeActiveIntent(buildingPlacementIntent);
@@ -81,7 +133,6 @@ public class TowerGraphics {
                 }
             }
         });
-
 
         MouseMotionAdapter motionListener = new MouseMotionAdapter() {
             @Override

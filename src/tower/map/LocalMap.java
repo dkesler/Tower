@@ -1,6 +1,7 @@
 package tower.map;
 
 import tower.buiildings.Building;
+import tower.grid.GridCoord;
 
 import java.awt.Graphics2D;
 import java.util.LinkedHashSet;
@@ -21,5 +22,19 @@ public class LocalMap {
 
     public Set<Building> getBuildings() {
         return buildings;
+    }
+
+    public Building getBuildingAt(GridCoord gridCoord) {
+        for (Building building : buildings) {
+            if (building.overlaps(gridCoord)) {
+                return building;
+            }
+        }
+
+        return null;
+    }
+
+    public void removeBuilding(Building building) {
+        buildings.remove(building);
     }
 }

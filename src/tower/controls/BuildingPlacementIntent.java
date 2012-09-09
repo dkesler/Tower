@@ -9,21 +9,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Set;
 
-public class BuildingPlacementIntent {
+public class BuildingPlacementIntent implements Intent {
     public String name;
     public BuildingPrototype prototype;
     public boolean isActive;
     public boolean isValidPlacement;
 
-    public void draw(Graphics2D g2, GridCoord gridCoord) {
+    public void draw(Graphics2D g2, GridCoord cursor) {
         if (isValidPlacement) {
             g2.setColor(new Color(0, 255, 0));
         } else {
             g2.setColor(new Color(255, 0, 0));
         }
         g2.drawRect(
-                gridCoord.xPixels,
-                gridCoord.yPixels,
+                cursor.xPixels,
+                cursor.yPixels,
                 prototype.width * GridUtils.UNIT_SIZE,
                 prototype.height * GridUtils.UNIT_SIZE
         );

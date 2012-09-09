@@ -1,6 +1,7 @@
 package tower.graphics;
 
 import tower.controls.BuildingPlacementIntent;
+import tower.controls.Intent;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 public class Drawer extends JPanel {
 
     final private LocalMap localMap;
-    final private Set<BuildingPlacementIntent> activeIntents = new LinkedHashSet<>();
+    final private Set<Intent> activeIntents = new LinkedHashSet<>();
 
     public int mouseX;
     public int mouseY;
@@ -28,16 +29,16 @@ public class Drawer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         localMap.draw(g2);
 
-        for (BuildingPlacementIntent intent : activeIntents) {
+        for (Intent intent : activeIntents) {
             intent.draw(g2, GridCoord.fromPixels(mouseX, mouseY));
         }
     }
 
-    public void addActiveIntent(BuildingPlacementIntent buildingPlacementIntent) {
-        activeIntents.add(buildingPlacementIntent);
+    public void addActiveIntent(Intent intent) {
+        activeIntents.add(intent);
     }
 
-    public void removeActiveIntent(BuildingPlacementIntent buildingPlacementIntent) {
-        activeIntents.remove(buildingPlacementIntent);
+    public void removeActiveIntent(Intent intent) {
+        activeIntents.remove(intent);
     }
 }

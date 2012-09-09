@@ -16,6 +16,10 @@ public class Building {
         this.prototype = prototype;
     }
 
+    public String getName() {
+        return prototype.name;
+    }
+
     public int leftEdge() {
         return gridCoord.xUnits;
     }
@@ -57,4 +61,18 @@ public class Building {
     }
 
 
+    public boolean overlaps(GridCoord gridCoord) {
+        boolean horizontalOverlap = gridCoord.xUnits >= leftEdge() && gridCoord.xUnits < rightEdge();
+        boolean verticalOverlap = gridCoord.yUnits >= upperEdge() && gridCoord.yUnits < lowerEdge();
+
+        return horizontalOverlap && verticalOverlap;
+    }
+
+    public int width() {
+        return prototype.width;
+    }
+
+    public int height() {
+        return prototype.height;
+    }
 }
