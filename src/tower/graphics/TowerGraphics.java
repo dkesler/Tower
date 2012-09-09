@@ -1,5 +1,7 @@
 package tower.graphics;
 
+import tower.map.LocalMap;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -10,8 +12,10 @@ import java.awt.event.WindowEvent;
 
 public class TowerGraphics {
 
-    public TowerGraphics() {
-        JFrame jFrame = new JFrame("Tower");
+    final private JFrame jFrame;
+
+    public TowerGraphics(LocalMap localMap) {
+        jFrame = new JFrame("Tower");
         jFrame.setBackground(Color.BLACK);
         jFrame.setMinimumSize(new Dimension(800, 600));
 
@@ -19,7 +23,7 @@ public class TowerGraphics {
 
         jFrame.add(jPanel);
 
-        jPanel.add(new Drawer());
+        jPanel.add(new Drawer(localMap));
 
         jFrame.addWindowListener(
                 new WindowAdapter() {
@@ -32,5 +36,9 @@ public class TowerGraphics {
 
         jFrame.setVisible(true);
         jPanel.setVisible(true);
+    }
+
+    public void repaint() {
+        jFrame.repaint();
     }
 }
