@@ -12,8 +12,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.BorderLayout;
@@ -26,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -38,6 +37,7 @@ public class TowerGraphics {
     final private BuildingPlacementIntent buildingPlacementIntent = new BuildingPlacementIntent();
     final private DestroyBuildingIntent destroyBuildingIntent = new DestroyBuildingIntent();
     final private Drawer drawer;
+    final private Camera camera;
 
     public TowerGraphics(final LocalMap localMap, final BuildingFactory buildingFactory) {
         jFrame = new JFrame("Tower");
@@ -76,13 +76,16 @@ public class TowerGraphics {
             }
         };
 
-        drawer = new Drawer(localMap);
+        camera = new Camera();
+
+        drawer = new Drawer(localMap, camera);
+
         jPanel.add(drawer);
         MouseAdapter listener = new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    final Building selected = localMap.getBuildingAt(GridCoord.fromPixels(e.getX(), e.getY()));
+                    final Building selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
                     if (selected != null) {
                         destroyBuildingIntent.isActive = true;
                         destroyBuildingIntent.building = selected;
@@ -119,7 +122,7 @@ public class TowerGraphics {
                 } else if (e.getButton() == MouseEvent.BUTTON1 && buildingPlacementIntent.isActive && buildingPlacementIntent.isValidPlacement) {
                     buildingPlacementIntent.isActive = false;
                     drawer.removeActiveIntent(buildingPlacementIntent);
-                    localMap.addBuilding(buildingFactory.createByName(buildingPlacementIntent.name, GridCoord.fromPixels(e.getX(), e.getY())));
+                    localMap.addBuilding(buildingFactory.createByName(buildingPlacementIntent.name, camera.convertEventToGrid(e)));
                 }
             }
         };
@@ -137,19 +140,24 @@ public class TowerGraphics {
         MouseMotionAdapter motionListener = new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                drawer.mouseX = e.getX();
-                drawer.mouseY = e.getY();
+                GridCoord mouseCoord = camera.convertEventToGrid(e);
+                drawer.mouseCoord = mouseCoord;
                 if (buildingPlacementIntent.isActive) {
-                    buildingPlacementIntent.updateValidity(GridCoord.fromPixels(e.getX(), e.getY()), localMap.getBuildings());
+                    buildingPlacementIntent.updateValidity(mouseCoord, localMap.getBuildings());
                 }
             }
         };
 
-        jPanel.addMouseListener(
-                listener
-        );
-
+        jPanel.addMouseListener(listener);
         jPanel.addMouseMotionListener(motionListener);
+        jPanel.addMouseWheelListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseWheelMoved(MouseWheelEvent e) {
+                        camera.zoom(-e.getWheelRotation());
+                    }
+                }
+        );
 
         jFrame.addWindowListener(
                 new WindowAdapter() {

@@ -20,10 +20,9 @@ public class GridCoord {
         return new GridCoord(xPixels, yPixels, xUnits, yUnits);
     }
 
-    public static GridCoord fromPixels(int xPixels, int yPixels) {
-
-        int xUnits = xPixels / GridUtils.UNIT_SIZE;
-        int yUnits = yPixels / GridUtils.UNIT_SIZE;
+    public static GridCoord fromPixels(double xPixels, double yPixels) {
+        int xUnits = (int) (xPixels / GridUtils.UNIT_SIZE);
+        int yUnits = (int) (yPixels / GridUtils.UNIT_SIZE);
 
         return fromUnits(xUnits, yUnits);
     }
