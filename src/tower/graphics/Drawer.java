@@ -11,30 +11,33 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Drawer extends JPanel {
+public class Drawer {
 
-    final private LocalMap localMap;
     final private Set<DrawableIntent> intents = new LinkedHashSet<>();
     final private Camera camera;
+    final private JPanel jPanel;
 
     private GridCoord mouseCoord;
 
-    public Drawer(LocalMap localMap, Camera camera) {
-        this.localMap = localMap;
+    public Drawer(final LocalMap localMap, final Camera camera, final JPanel parent) {
         this.camera = camera;
-    }
 
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+        jPanel = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
 
-        g2.setTransform(camera.getCameraTransform());
+                g2.setTransform(camera.getCameraTransform());
 
-        localMap.draw(g2);
+                localMap.draw(g2);
 
-        for (DrawableIntent drawableIntent : intents) {
-            drawableIntent.draw(g2, mouseCoord);
-        }
+                for (DrawableIntent drawableIntent : intents) {
+                    drawableIntent.draw(g2, mouseCoord);
+                }
+            }
+        };
+
+        parent.add(jPanel);
     }
 
     public void setMouseCoord(MouseEvent e) {

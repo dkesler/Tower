@@ -27,8 +27,7 @@ public class TowerGraphics extends JFrame {
         jFrame.add(jPanel);
 
         Camera camera = new Camera();
-        Drawer drawer = new Drawer(localMap, camera);
-        jPanel.add(drawer);
+        Drawer drawer = new Drawer(localMap, camera, jPanel);
 
         new ContextMenuIntent(jPanel, localMap, camera, drawer, buildingFactory);
         new CursorTrackingIntent(drawer, jPanel);
