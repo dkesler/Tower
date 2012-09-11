@@ -1,6 +1,11 @@
 package tower.graphics;
 
+import tower.buiildings.BuildingFactory;
+import tower.controls.CameraControlIntent;
+import tower.controls.ContextMenuIntent;
+import tower.controls.CursorTrackingIntent;
 import tower.controls.DrawableIntent;
+import tower.controls.ViewBuildingDetailsIntent;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -11,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Drawer {
+public class LocalMapPanel {
 
     final private Set<DrawableIntent> intents = new LinkedHashSet<>();
     final private Camera camera;
@@ -19,8 +24,9 @@ public class Drawer {
 
     private GridCoord mouseCoord;
 
-    public Drawer(final LocalMap localMap, final Camera camera, final JPanel parent) {
-        this.camera = camera;
+    public LocalMapPanel(final LocalMap localMap, final BuildingFactory buildingFactory) {
+        camera = new Camera();
+
 
         jPanel = new JPanel() {
             @Override
@@ -37,7 +43,10 @@ public class Drawer {
             }
         };
 
-        parent.add(jPanel);
+        new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
+        new CursorTrackingIntent(this, jPanel);
+        new CameraControlIntent(camera, jPanel);
+        new ViewBuildingDetailsIntent(localMap, camera, jPanel, this);
     }
 
     public void setMouseCoord(MouseEvent e) {
@@ -46,5 +55,9 @@ public class Drawer {
 
     public void registerIntent(DrawableIntent drawableIntent) {
         intents.add(drawableIntent);
+    }
+
+    public JPanel getjPanel() {
+        return jPanel;
     }
 }

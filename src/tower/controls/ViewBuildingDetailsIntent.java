@@ -2,7 +2,7 @@ package tower.controls;
 
 import tower.buiildings.Building;
 import tower.graphics.Camera;
-import tower.graphics.Drawer;
+import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -18,12 +18,12 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
     private final LocalMap localMap;
     private final Camera camera;
 
-    public ViewBuildingDetailsIntent(LocalMap localMap, Camera camera, JPanel jPanel, Drawer drawer) {
+    public ViewBuildingDetailsIntent(LocalMap localMap, Camera camera, JPanel jPanel, LocalMapPanel localMapPanel) {
         this.localMap = localMap;
         this.camera = camera;
 
         jPanel.addMouseListener(this);
-        drawer.registerIntent(this);
+        localMapPanel.registerIntent(this);
     }
 
     @Override

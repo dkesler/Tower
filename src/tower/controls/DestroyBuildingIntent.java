@@ -1,7 +1,7 @@
 package tower.controls;
 
 import tower.buiildings.Building;
-import tower.graphics.Drawer;
+import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
@@ -25,21 +25,21 @@ public class DestroyBuildingIntent extends DrawableIntent {
     private int frames;
 
     final private JPanel jPanel;
-    final private Drawer drawer;
+    final private LocalMapPanel localMapPanel;
     final private JMenu destroyBuildingMenu;
     final private LocalMap localMap;
     final private DestroyBuildingIntent thisIntent;
 
     final ActionListener destroyBuildingActionListener;
 
-    public DestroyBuildingIntent(JPanel jPanel, Drawer drawer, LocalMap localMap) {
+    public DestroyBuildingIntent(JPanel jPanel, LocalMapPanel localMapPanel, LocalMap localMap) {
         this.thisIntent = this;
         this.jPanel = jPanel;
-        this.drawer = drawer;
+        this.localMapPanel = localMapPanel;
         this.localMap = localMap;
         this.destroyBuildingMenu = new JMenu();
 
-        this.drawer.registerIntent(this);
+        this.localMapPanel.registerIntent(this);
 
         destroyBuildingActionListener = new ActionListener() {
             @Override

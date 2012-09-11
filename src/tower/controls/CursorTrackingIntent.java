@@ -1,6 +1,6 @@
 package tower.controls;
 
-import tower.graphics.Drawer;
+import tower.graphics.LocalMapPanel;
 
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
@@ -8,10 +8,10 @@ import java.awt.event.MouseEvent;
 public class CursorTrackingIntent extends Intent {
 
     private final JPanel jPanel;
-    private final Drawer drawer;
+    private final LocalMapPanel localMapPanel;
 
-    public CursorTrackingIntent(Drawer drawer, JPanel jPanel) {
-        this.drawer = drawer;
+    public CursorTrackingIntent(LocalMapPanel localMapPanel, JPanel jPanel) {
+        this.localMapPanel = localMapPanel;
         this.jPanel = jPanel;
 
         jPanel.addMouseMotionListener(this);
@@ -19,6 +19,6 @@ public class CursorTrackingIntent extends Intent {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        drawer.setMouseCoord(e);
+        localMapPanel.setMouseCoord(e);
     }
 }

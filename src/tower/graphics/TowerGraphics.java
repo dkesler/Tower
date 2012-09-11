@@ -1,10 +1,9 @@
 package tower.graphics;
 
+import tower.buiildings.Building;
 import tower.buiildings.BuildingFactory;
-import tower.controls.CameraControlIntent;
-import tower.controls.ContextMenuIntent;
-import tower.controls.CursorTrackingIntent;
-import tower.controls.ViewBuildingDetailsIntent;
+import tower.grid.GridCoord;
+import tower.items.ItemFactory;
 import tower.map.LocalMap;
 
 import javax.swing.JFrame;
@@ -19,20 +18,22 @@ public class TowerGraphics {
 
     final private JFrame jFrame;
 
-    public TowerGraphics(final LocalMap localMap, final BuildingFactory buildingFactory) {
+    public TowerGraphics() {
         jFrame = new JFrame("Tower");
         jFrame.setBackground(Color.BLACK);
         jFrame.setMinimumSize(new Dimension(800, 600));
         JPanel jPanel = new JPanel(new BorderLayout());
         jFrame.add(jPanel);
 
-        Camera camera = new Camera();
-        Drawer drawer = new Drawer(localMap, camera, jPanel);
+        LocalMap localMap = new LocalMap();
+        BuildingFactory buildingFactory = new BuildingFactory();
+        ItemFactory itemFactory = new ItemFactory();
 
-        new ContextMenuIntent(jPanel, localMap, camera, drawer, buildingFactory);
-        new CursorTrackingIntent(drawer, jPanel);
-        new CameraControlIntent(camera, jPanel);
-        new ViewBuildingDetailsIntent(localMap, camera, jPanel, drawer);
+        initialize(localMap, buildingFactory, itemFactory);
+
+        LocalMapPanel localMapPanel = new LocalMapPanel(localMap, buildingFactory);
+
+        jPanel.add(localMapPanel.getjPanel());
 
         jFrame.addWindowListener(
                 new WindowAdapter() {
@@ -47,6 +48,13 @@ public class TowerGraphics {
         jPanel.requestFocusInWindow();
 
         jFrame.setVisible(true);
+    }
+
+    private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
+        Building blacksmith = buildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
+        blacksmith.addItem(itemFactory.createByName("Iron Ore"));
+        localMap.addBuilding(blacksmith);
+        localMap.addBuilding(buildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
     }
 
     public void repaint() {

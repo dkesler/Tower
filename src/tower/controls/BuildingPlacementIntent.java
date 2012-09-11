@@ -4,7 +4,7 @@ import tower.buiildings.Building;
 import tower.buiildings.BuildingFactory;
 import tower.buiildings.BuildingPrototype;
 import tower.graphics.Camera;
-import tower.graphics.Drawer;
+import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
@@ -28,19 +28,19 @@ public class BuildingPlacementIntent extends DrawableIntent {
     final private LocalMap localMap;
     final private BuildingFactory buildingFactory;
     final private JMenu createBuildingMenu;
-    final private Drawer drawer;
+    final private LocalMapPanel localMapPanel;
     final private JPanel jPanel;
     final private Camera camera;
 
-    public BuildingPlacementIntent(LocalMap localMap, BuildingFactory buildingFactory, Drawer drawer, JPanel jPanel, Camera camera) {
+    public BuildingPlacementIntent(LocalMap localMap, BuildingFactory buildingFactory, LocalMapPanel localMapPanel, JPanel jPanel, Camera camera) {
         this.localMap = localMap;
         this.buildingFactory = buildingFactory;
         this.createBuildingMenu = new JMenu();
-        this.drawer = drawer;
+        this.localMapPanel = localMapPanel;
         this.jPanel = jPanel;
         this.camera = camera;
 
-        this.drawer.registerIntent(this);
+        this.localMapPanel.registerIntent(this);
 
         final BuildingPlacementIntent thisIntent = this;
         for (final String building : buildingFactory.getBuildingNames()) {

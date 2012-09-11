@@ -3,12 +3,10 @@ package tower.controls;
 import tower.buiildings.Building;
 import tower.buiildings.BuildingFactory;
 import tower.graphics.Camera;
-import tower.graphics.Drawer;
-import tower.grid.GridCoord;
+import tower.graphics.LocalMapPanel;
 import tower.map.LocalMap;
 
 import javax.swing.JPanel;
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -20,13 +18,13 @@ public class ContextMenuIntent extends Intent {
     private final DestroyBuildingIntent destroyBuildingIntent;
     private final BuildingPlacementIntent buildingPlacementIntent;
 
-    public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, Drawer drawer, BuildingFactory buildingFactory) {
+    public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel, BuildingFactory buildingFactory) {
         this.jPanel = jPanel;
         this.localMap = localMap;
         this.camera = camera;
 
-        destroyBuildingIntent = new DestroyBuildingIntent(jPanel, drawer, localMap);
-        buildingPlacementIntent = new BuildingPlacementIntent(localMap, buildingFactory, drawer, jPanel, camera);
+        destroyBuildingIntent = new DestroyBuildingIntent(jPanel, localMapPanel, localMap);
+        buildingPlacementIntent = new BuildingPlacementIntent(localMap, buildingFactory, localMapPanel, jPanel, camera);
 
         jPanel.addMouseListener(this);
         jPanel.addMouseMotionListener(this);
