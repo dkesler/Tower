@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Set;
 
 public class BuildingPlacementIntent extends DrawableIntent {
     private String name;
@@ -41,6 +40,8 @@ public class BuildingPlacementIntent extends DrawableIntent {
         this.jPanel = jPanel;
         this.camera = camera;
 
+        this.drawer.registerIntent(this);
+
         final BuildingPlacementIntent thisIntent = this;
         for (final String building : buildingFactory.getBuildingNames()) {
             JMenuItem menuItem = new JMenuItem(building);
@@ -52,7 +53,6 @@ public class BuildingPlacementIntent extends DrawableIntent {
                             name = building;
                             prototype = thisIntent.buildingFactory.getPrototype(building);
                             isActive = true;
-                            thisIntent.drawer.addActiveIntent(thisIntent);
                         }
                     }
             );
@@ -61,17 +61,20 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D g2, GridCoord cursor) {
-        if (isValidPlacement) {
-            g2.setColor(new Color(0, 255, 0));
-        } else {
-            g2.setColor(new Color(255, 0, 0));
+        if (isActive)
+        {
+            if (isValidPlacement) {
+                g2.setColor(new Color(0, 255, 0));
+            } else {
+                g2.setColor(new Color(255, 0, 0));
+            }
+            g2.drawRect(
+                    cursor.xPixels,
+                    cursor.yPixels,
+                    prototype.width * GridUtils.UNIT_SIZE,
+                    prototype.height * GridUtils.UNIT_SIZE
+            );
         }
-        g2.drawRect(
-                cursor.xPixels,
-                cursor.yPixels,
-                prototype.width * GridUtils.UNIT_SIZE,
-                prototype.height * GridUtils.UNIT_SIZE
-        );
     }
 
     private void updateValidity(GridCoord gridCoord) {
@@ -93,7 +96,6 @@ public class BuildingPlacementIntent extends DrawableIntent {
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
         } else if (e.getButton() == MouseEvent.BUTTON1 && isActive && isValidPlacement) {
             isActive = false;
-            drawer.removeActiveIntent(this);
             localMap.addBuilding(
                     buildingFactory.createByName(
                             name,
@@ -114,7 +116,6 @@ public class BuildingPlacementIntent extends DrawableIntent {
     public void keyPressed(KeyEvent e) {
         if (isActive && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             isActive = false;
-            drawer.removeActiveIntent(this);
         }
     }
 }

@@ -12,14 +12,10 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class TowerGraphics {
+public class TowerGraphics extends JFrame {
 
     final private JFrame jFrame;
 
@@ -52,7 +48,6 @@ public class TowerGraphics {
         jPanel.requestFocusInWindow();
 
         jFrame.setVisible(true);
-        jPanel.setVisible(true);
     }
 
     public void repaint() {

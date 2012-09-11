@@ -39,33 +39,37 @@ public class DestroyBuildingIntent extends DrawableIntent {
         this.localMap = localMap;
         this.destroyBuildingMenu = new JMenu();
 
+        this.drawer.registerIntent(this);
+
         destroyBuildingActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 thisIntent.localMap.removeBuilding(thisIntent.selected);
                 thisIntent.isActive = false;
-                thisIntent.drawer.removeActiveIntent(thisIntent);
             }
         };
     }
 
     @Override
     public void draw(Graphics2D g2, GridCoord cursor) {
-        frames++;
+        if (isActive) {
 
-        if (frames < FRAMES_PER_BLINK) {
-            g2.setColor(new Color(255, 0, 0));
+            frames++;
 
-            g2.drawRect(
-                    selected.leftEdge() * GridUtils.UNIT_SIZE,
-                    selected.upperEdge() * GridUtils.UNIT_SIZE,
-                    selected.width() * GridUtils.UNIT_SIZE,
-                    selected.height() * GridUtils.UNIT_SIZE
-            );
-        }
+            if (frames < FRAMES_PER_BLINK) {
+                g2.setColor(new Color(255, 0, 0));
 
-        if (frames == 2 * FRAMES_PER_BLINK) {
-            frames = 0;
+                g2.drawRect(
+                        selected.leftEdge() * GridUtils.UNIT_SIZE,
+                        selected.upperEdge() * GridUtils.UNIT_SIZE,
+                        selected.width() * GridUtils.UNIT_SIZE,
+                        selected.height() * GridUtils.UNIT_SIZE
+                );
+            }
+
+            if (frames == 2 * FRAMES_PER_BLINK) {
+                frames = 0;
+            }
         }
     }
 
@@ -82,8 +86,6 @@ public class DestroyBuildingIntent extends DrawableIntent {
         jMenuItem.addActionListener(destroyBuildingActionListener);
         destroyBuildingMenu.add(jMenuItem);
 
-        drawer.addActiveIntent(this);
-
         JPopupMenu destroyPopup = destroyBuildingMenu.getPopupMenu();
         destroyPopup.addPopupMenuListener(
                 new PopupMenuListener() {
@@ -97,7 +99,6 @@ public class DestroyBuildingIntent extends DrawableIntent {
 
                     @Override
                     public void popupMenuCanceled(PopupMenuEvent e) {
-                        drawer.removeActiveIntent(thisIntent);
                         thisIntent.isActive = false;
                     }
                 }

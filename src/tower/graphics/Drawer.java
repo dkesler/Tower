@@ -14,7 +14,7 @@ import java.util.Set;
 public class Drawer extends JPanel {
 
     final private LocalMap localMap;
-    final private Set<DrawableIntent> activeDrawableIntents = new LinkedHashSet<>();
+    final private Set<DrawableIntent> intents = new LinkedHashSet<>();
     final private Camera camera;
 
     private GridCoord mouseCoord;
@@ -32,7 +32,7 @@ public class Drawer extends JPanel {
 
         localMap.draw(g2);
 
-        for (DrawableIntent drawableIntent : activeDrawableIntents) {
+        for (DrawableIntent drawableIntent : intents) {
             drawableIntent.draw(g2, mouseCoord);
         }
     }
@@ -41,11 +41,7 @@ public class Drawer extends JPanel {
         this.mouseCoord = camera.convertEventToGrid(e);
     }
 
-    public void addActiveIntent(DrawableIntent drawableIntent) {
-        activeDrawableIntents.add(drawableIntent);
-    }
-
-    public void removeActiveIntent(DrawableIntent drawableIntent) {
-        activeDrawableIntents.remove(drawableIntent);
+    public void registerIntent(DrawableIntent drawableIntent) {
+        intents.add(drawableIntent);
     }
 }

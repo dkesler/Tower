@@ -23,7 +23,7 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         this.camera = camera;
 
         jPanel.addMouseListener(this);
-        drawer.addActiveIntent(this);
+        drawer.registerIntent(this);
     }
 
     @Override
