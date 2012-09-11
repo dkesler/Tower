@@ -4,6 +4,7 @@ import tower.buiildings.BuildingFactory;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
+import tower.controls.ViewBuildingDetailsIntent;
 import tower.map.LocalMap;
 
 import javax.swing.JFrame;
@@ -36,6 +37,7 @@ public class TowerGraphics {
         new ContextMenuIntent(jPanel, localMap, camera, drawer, buildingFactory);
         new CursorTrackingIntent(drawer, jPanel);
         new CameraControlIntent(camera, jPanel);
+        new ViewBuildingDetailsIntent(localMap, camera, jPanel, drawer);
 
         jFrame.addWindowListener(
                 new WindowAdapter() {

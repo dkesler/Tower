@@ -1,15 +1,22 @@
 package tower.buiildings;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import tower.grid.GridCoord;
+import tower.items.Item;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Building {
 
     final private BuildingPrototype prototype;
     final private GridCoord gridCoord;
+    final private Multimap<String, Item> storedItems = HashMultimap.create();
 
     public Building(BuildingPrototype prototype, GridCoord gridCoord) {
         this.gridCoord = gridCoord;
@@ -74,5 +81,13 @@ public class Building {
 
     public int height() {
         return prototype.height;
+    }
+
+    public void addItem(Item item) {
+        storedItems.put(item.getName(), item);
+    }
+
+    public Multimap<String, Item> getStoredItems() {
+        return storedItems;
     }
 }
