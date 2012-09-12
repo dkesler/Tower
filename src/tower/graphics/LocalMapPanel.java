@@ -43,10 +43,11 @@ public class LocalMapPanel {
             }
         };
 
-        new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
+        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
         new CursorTrackingIntent(this, jPanel);
         new CameraControlIntent(camera, jPanel);
-        new ViewBuildingDetailsIntent(localMap, camera, jPanel, this);
+        new ViewBuildingDetailsIntent(localMap, camera, jPanel, this)
+                .registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
     }
 
     public void setMouseCoord(MouseEvent e) {

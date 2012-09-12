@@ -28,8 +28,10 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+        if (isActivatable()) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+            }
         }
     }
 
@@ -48,7 +50,9 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
                                 "%-20s %d\n",
                                 itemType,
                                 selected.getStoredItems().get(itemType).size()
-                        ), 400, height
+                        ),
+                        400,
+                        height
                 );
             }
         }

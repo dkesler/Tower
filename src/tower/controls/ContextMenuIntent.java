@@ -16,7 +16,7 @@ public class ContextMenuIntent extends Intent {
     private final Camera camera;
 
     private final DestroyBuildingIntent destroyBuildingIntent;
-    private final BuildingPlacementIntent buildingPlacementIntent;
+    public final BuildingPlacementIntent buildingPlacementIntent;
 
     public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel, BuildingFactory buildingFactory) {
         this.jPanel = jPanel;

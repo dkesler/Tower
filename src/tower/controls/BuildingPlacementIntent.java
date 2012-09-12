@@ -22,7 +22,7 @@ import java.awt.event.MouseEvent;
 public class BuildingPlacementIntent extends DrawableIntent {
     private String name;
     private BuildingPrototype prototype;
-    private boolean isActive;
+    private boolean active;
     private boolean isValidPlacement;
 
     final private LocalMap localMap;
@@ -52,7 +52,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
                         public void actionPerformed(ActionEvent e) {
                             name = building;
                             prototype = thisIntent.buildingFactory.getPrototype(building);
-                            isActive = true;
+                            active = true;
                         }
                     }
             );
@@ -61,7 +61,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D g2, GridCoord cursor) {
-        if (isActive)
+        if (active)
         {
             if (isValidPlacement) {
                 g2.setColor(new Color(0, 255, 0));
@@ -91,11 +91,11 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!isActive && e.getButton() == MouseEvent.BUTTON3) {
+        if (!active && e.getButton() == MouseEvent.BUTTON3) {
             jPanel.add(createBuildingMenu);
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
-        } else if (e.getButton() == MouseEvent.BUTTON1 && isActive && isValidPlacement) {
-            isActive = false;
+        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement) {
+            active = false;
             localMap.addBuilding(
                     buildingFactory.createByName(
                             name,
@@ -107,15 +107,20 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (isActive) {
+        if (active) {
             updateValidity(camera.convertEventToGrid(e));
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (isActive && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            isActive = false;
+        if (active && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            active = false;
         }
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 }
