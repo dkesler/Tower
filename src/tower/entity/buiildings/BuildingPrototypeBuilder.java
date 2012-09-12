@@ -1,9 +1,11 @@
-package tower.buiildings;
+package tower.entity.buiildings;
 
 import com.google.common.collect.ImmutableMap;
+import tower.entity.FilePropertySetter;
+import tower.entity.IntegerPropertySetter;
+import tower.entity.PropertySetter;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class BuildingPrototypeBuilder {

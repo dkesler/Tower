@@ -1,9 +1,9 @@
 package tower.graphics;
 
-import tower.buiildings.Building;
-import tower.buiildings.BuildingFactory;
+import tower.entity.buiildings.Building;
+import tower.entity.buiildings.BuildingFactory;
 import tower.grid.GridCoord;
-import tower.items.ItemFactory;
+import tower.entity.items.ItemFactory;
 import tower.map.LocalMap;
 
 import javax.swing.JFrame;

@@ -1,4 +1,4 @@
-package tower.buiildings;
+package tower.entity;
 
 import org.apache.commons.io.FileUtils;
 

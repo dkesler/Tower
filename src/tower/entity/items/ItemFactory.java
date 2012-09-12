@@ -1,11 +1,7 @@
-package tower.items;
+package tower.entity.items;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import tower.buiildings.Building;
-import tower.buiildings.BuildingPrototype;
-import tower.buiildings.BuildingPrototypeBuilder;
-import tower.grid.GridCoord;
 
 import java.io.File;
 import java.io.FilenameFilter;

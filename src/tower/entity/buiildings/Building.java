@@ -1,16 +1,13 @@
-package tower.buiildings;
+package tower.entity.buiildings;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import tower.grid.GridCoord;
-import tower.items.Item;
+import tower.entity.items.Item;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Building {
 

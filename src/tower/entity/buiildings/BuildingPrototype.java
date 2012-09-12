@@ -1,4 +1,4 @@
-package tower.buiildings;
+package tower.entity.buiildings;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

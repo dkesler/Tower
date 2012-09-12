@@ -1,8 +1,7 @@
-package tower.items;
+package tower.entity.items;
 
 import com.google.common.collect.ImmutableMap;
-import tower.buiildings.BuildingPrototype;
-import tower.buiildings.PropertySetter;
+import tower.entity.PropertySetter;
 
 import java.util.Map;
 

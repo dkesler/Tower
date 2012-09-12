@@ -1,6 +1,6 @@
 package tower.controls;
 
-import tower.buiildings.Building;
+import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
 import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;

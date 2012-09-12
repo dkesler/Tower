@@ -1,4 +1,4 @@
-package tower.items;
+package tower.entity.items;
 
 public class Item {
     final private ItemPrototype prototype;

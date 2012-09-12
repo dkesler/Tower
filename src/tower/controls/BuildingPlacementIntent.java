@@ -1,8 +1,8 @@
 package tower.controls;
 
-import tower.buiildings.Building;
-import tower.buiildings.BuildingFactory;
-import tower.buiildings.BuildingPrototype;
+import tower.entity.buiildings.Building;
+import tower.entity.buiildings.BuildingFactory;
+import tower.entity.buiildings.BuildingPrototype;
 import tower.graphics.Camera;
 import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;

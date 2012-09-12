@@ -1,6 +1,6 @@
 package tower.graphics;
 
-import tower.buiildings.BuildingFactory;
+import tower.entity.buiildings.BuildingFactory;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;

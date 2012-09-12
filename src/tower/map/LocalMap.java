@@ -1,6 +1,6 @@
 package tower.map;
 
-import tower.buiildings.Building;
+import tower.entity.buiildings.Building;
 import tower.grid.GridCoord;
 
 import java.awt.Graphics2D;

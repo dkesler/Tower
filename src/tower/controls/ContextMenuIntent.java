@@ -1,7 +1,7 @@
 package tower.controls;
 
-import tower.buiildings.Building;
-import tower.buiildings.BuildingFactory;
+import tower.entity.buiildings.Building;
+import tower.entity.buiildings.BuildingFactory;
 import tower.graphics.Camera;
 import tower.graphics.LocalMapPanel;
 import tower.map.LocalMap;
