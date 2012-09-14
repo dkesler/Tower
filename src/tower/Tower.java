@@ -15,8 +15,8 @@ public class Tower {
                 throw new RuntimeException("Exception while sleeping", e);
             }
 
+            towerGraphics.pack();
             towerGraphics.repaint();
-
         }
     }
 }

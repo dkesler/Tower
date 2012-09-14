@@ -1,11 +1,11 @@
 package tower.graphics;
 
+import tower.controls.ViewBuildingDetailsIntent;
 import tower.entity.buiildings.BuildingFactory;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
 import tower.controls.DrawableIntent;
-import tower.controls.ViewBuildingDetailsIntent;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -24,9 +24,8 @@ public class LocalMapPanel {
 
     private GridCoord mouseCoord;
 
-    public LocalMapPanel(final LocalMap localMap, final BuildingFactory buildingFactory) {
-        camera = new Camera();
-
+    public LocalMapPanel(final LocalMap localMap, final Camera camera) {
+        this.camera = camera;
 
         jPanel = new JPanel() {
             @Override
@@ -43,11 +42,7 @@ public class LocalMapPanel {
             }
         };
 
-        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
-        new CursorTrackingIntent(this, jPanel);
-        new CameraControlIntent(camera, jPanel);
-        new ViewBuildingDetailsIntent(localMap, camera, jPanel, this)
-                .registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
+        jPanel.setFocusable(true);
     }
 
     public void setMouseCoord(MouseEvent e) {

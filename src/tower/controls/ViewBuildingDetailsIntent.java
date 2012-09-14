@@ -2,7 +2,6 @@ package tower.controls;
 
 import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
-import tower.graphics.LocalMapPanel;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -17,13 +16,18 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
 
     private final LocalMap localMap;
     private final Camera camera;
+    private final JPanel jPanel;
 
-    public ViewBuildingDetailsIntent(LocalMap localMap, Camera camera, JPanel jPanel, LocalMapPanel localMapPanel) {
+    public ViewBuildingDetailsIntent(
+            LocalMap localMap,
+            Camera camera,
+            JPanel jPanel
+    ) {
         this.localMap = localMap;
         this.camera = camera;
+        this.jPanel = jPanel;
 
         jPanel.addMouseListener(this);
-        localMapPanel.registerIntent(this);
     }
 
     @Override
@@ -40,8 +44,12 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 
-            int height = 400;
-            graphics.drawString(String.format("%-20s %s", "Item", "Count"), 400, height);
+            int panelY = jPanel.getY();
+            int panelX = jPanel.getX();
+
+            int height = panelY + 80;
+
+            graphics.drawString(String.format("%-20s %s", "Item", "Count"), panelX, height);
 
             for (String itemType : selected.getStoredItems().keySet()) {
                 height += 16;
@@ -51,7 +59,7 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
                                 itemType,
                                 selected.getStoredItems().get(itemType).size()
                         ),
-                        400,
+                        panelX,
                         height
                 );
             }

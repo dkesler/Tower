@@ -1,6 +1,7 @@
 package tower.entity.buiildings;
 
 import com.google.common.collect.ImmutableMap;
+import tower.entity.EntityPrototypeBuilder;
 import tower.entity.FilePropertySetter;
 import tower.entity.IntegerPropertySetter;
 import tower.entity.PropertySetter;
@@ -8,7 +9,7 @@ import tower.entity.PropertySetter;
 import java.io.File;
 import java.util.Map;
 
-public class BuildingPrototypeBuilder {
+public class BuildingPrototypeBuilder implements EntityPrototypeBuilder<BuildingPrototype> {
 
     String name;
     Integer width;
@@ -69,7 +70,7 @@ public class BuildingPrototypeBuilder {
         return name;
     }
 
-    public BuildingPrototype toBuilding() {
+    public BuildingPrototype toEntityPrototype() {
         return new BuildingPrototype(
                 name,
                 imageFile,

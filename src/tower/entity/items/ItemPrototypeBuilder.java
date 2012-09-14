@@ -1,11 +1,12 @@
 package tower.entity.items;
 
 import com.google.common.collect.ImmutableMap;
+import tower.entity.EntityPrototypeBuilder;
 import tower.entity.PropertySetter;
 
 import java.util.Map;
 
-public class ItemPrototypeBuilder {
+public class ItemPrototypeBuilder implements EntityPrototypeBuilder<ItemPrototype>{
 
     String name;
 
@@ -37,7 +38,7 @@ public class ItemPrototypeBuilder {
         return name;
     }
 
-    public ItemPrototype toItem() {
+    public ItemPrototype toEntityPrototype() {
         return new ItemPrototype(
                 name
         );
