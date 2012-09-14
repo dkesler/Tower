@@ -28,11 +28,8 @@ public abstract class Panel {
 
     public final void draw(Graphics2D graphics2D, Point2D mouseCoord) {
         if (visible) {
-
             graphics2D.setColor(bgColor);
             graphics2D.fillRect(x, y, width, height);
-            graphics2D.setColor(borderColor);
-            graphics2D.drawRect(x, y, width, height);
 
             for (Panel subPanel : subPanels) {
                 subPanel.draw(graphics2D, mouseCoord);
@@ -43,6 +40,9 @@ public abstract class Panel {
             for (DrawableIntent drawableIntent : drawableIntents) {
                 drawableIntent.draw(graphics2D, mouseCoord);
             }
+
+            graphics2D.setColor(borderColor);
+            graphics2D.drawRect(x, y, width, height);
         }
     }
 
@@ -50,6 +50,10 @@ public abstract class Panel {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public int getX() {

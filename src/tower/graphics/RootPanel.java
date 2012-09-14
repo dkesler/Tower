@@ -3,7 +3,6 @@ package tower.graphics;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
-import tower.controls.DrawableIntent;
 import tower.controls.ViewBuildingDetailsIntent;
 import tower.entity.buiildings.Building;
 import tower.entity.buiildings.BuildingFactory;
@@ -11,7 +10,9 @@ import tower.entity.items.ItemFactory;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -19,8 +20,10 @@ import java.awt.geom.Point2D;
 public class RootPanel extends Panel {
 
     private final JPanel jPanel;
+    private final LocalMapPanel localMapPanel;
+    private final BuildingDetailsPanel buildingDetailsPanel;
+
     private Point2D mouseCoord;
-    private final CursorTrackingIntent cursorTrackingIntent;
 
     public RootPanel() {
         this.visible = true;
@@ -32,12 +35,11 @@ public class RootPanel extends Panel {
             }
         };
         jPanel.setFocusable(true);
+        jPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        LocalMapPanel localMapPanel = new LocalMapPanel();
-        BuildingDetailsPanel buildingDetailsPanel = new BuildingDetailsPanel();
-        buildingDetailsPanel.setX(600);
+        localMapPanel = new LocalMapPanel();
+        buildingDetailsPanel = new BuildingDetailsPanel();
         buildingDetailsPanel.setWidth(200);
-        buildingDetailsPanel.setHeight(600);
         subPanels.add(localMapPanel);
         subPanels.add(buildingDetailsPanel);
 
@@ -50,8 +52,7 @@ public class RootPanel extends Panel {
 
         initialize(localMapPanel.getLocalMap(), buildingFactory, new ItemFactory());
 
-        cursorTrackingIntent = new CursorTrackingIntent(this, jPanel);
-
+         new CursorTrackingIntent(this, jPanel);
     }
 
     private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
@@ -66,18 +67,20 @@ public class RootPanel extends Panel {
     }
 
     private void draw(Graphics2D graphics2D) {
+        this.width = jPanel.getWidth();
+        this.height = jPanel.getHeight();
+
+        localMapPanel.setHeight(jPanel.getHeight());
+        localMapPanel.setWidth(buildingDetailsPanel.isVisible() ? jPanel.getWidth() - 200 : jPanel.getWidth());
+
+        buildingDetailsPanel.setHeight(jPanel.getHeight());
+        buildingDetailsPanel.setX(jPanel.getWidth() - 200);
+
         this.draw(graphics2D, mouseCoord);
     }
 
     @Override
     protected void drawImplSpecific(Graphics2D graphics2D, Point2D mouseCoord) {
-        for (Panel subPanel : subPanels) {
-            subPanel.draw(graphics2D, mouseCoord);
-        }
-
-        for (DrawableIntent drawableIntent : drawableIntents) {
-            drawableIntent.draw(graphics2D, mouseCoord);
-        }
     }
 
     public void setMouseCoord(Point2D mouseCoord) {
