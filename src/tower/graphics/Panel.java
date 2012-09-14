@@ -15,7 +15,8 @@ public abstract class Panel {
     protected int y;
     protected int width;
     protected int height;
-    protected Color color = Color.BLACK;
+    protected Color bgColor = Color.BLACK;
+    protected Color borderColor = Color.WHITE;
     protected boolean visible;
 
     protected final List<DrawableIntent> drawableIntents = new LinkedList<>();
@@ -27,6 +28,12 @@ public abstract class Panel {
 
     public final void draw(Graphics2D graphics2D, Point2D mouseCoord) {
         if (visible) {
+
+            graphics2D.setColor(bgColor);
+            graphics2D.fillRect(x, y, width, height);
+            graphics2D.setColor(borderColor);
+            graphics2D.drawRect(x, y, width, height);
+
             for (Panel subPanel : subPanels) {
                 subPanel.draw(graphics2D, mouseCoord);
             }

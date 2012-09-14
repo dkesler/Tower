@@ -51,23 +51,21 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 
-            int panelY = buildingDetailsPanel.getY();
-            int panelX = buildingDetailsPanel.getX();
+            int y = buildingDetailsPanel.getY() + 16;
+            int x = buildingDetailsPanel.getX() + 5;
 
-            int height = panelY + 80;
-
-            graphics.drawString(String.format("%-20s %s", "Item", "Count"), panelX, height);
+            graphics.drawString(String.format("%-20s %s", "Item", "Count"), x, y);
 
             for (String itemType : selected.getStoredItems().keySet()) {
-                height += 16;
+                y += 16;
                 graphics.drawString(
                         String.format(
                                 "%-20s %d\n",
                                 itemType,
                                 selected.getStoredItems().get(itemType).size()
                         ),
-                        panelX,
-                        height
+                        x,
+                        y
                 );
             }
         }

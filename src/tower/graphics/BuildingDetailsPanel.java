@@ -7,7 +7,6 @@ public class BuildingDetailsPanel extends Panel {
 
     @Override
     protected void drawImplSpecific(Graphics2D graphics2D, Point2D mouseCoord) {
-        graphics2D.setColor(color);
-        graphics2D.fillRect(x, y, width, height);
+
     }
 }
