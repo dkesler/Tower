@@ -79,4 +79,8 @@ public abstract class Panel {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public boolean within(Point2D point) {
+        return point.getX() >= x && point.getX() <= x + width && point.getY() >= y && point.getY() <= y + height;
+    }
 }

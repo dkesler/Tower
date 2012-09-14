@@ -100,7 +100,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
         if (!active && e.getButton() == MouseEvent.BUTTON3) {
             jPanel.add(createBuildingMenu);
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
-        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement) {
+        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && localMapPanel.within(e.getPoint())) {
             active = false;
             localMap.addBuilding(
                     buildingFactory.createByName(
