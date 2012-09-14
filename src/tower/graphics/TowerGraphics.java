@@ -35,29 +35,8 @@ public class TowerGraphics {
         jFrame.setMinimumSize(new Dimension(800, 600));
         jFrame.setBackground(Color.BLACK);
 
-        LocalMap localMap = new LocalMap();
-        BuildingFactory buildingFactory = new BuildingFactory();
-        ItemFactory itemFactory = new ItemFactory();
-
-        initialize(localMap, buildingFactory, itemFactory);
-
-        Camera camera = new Camera();
-        LocalMapPanel localMapPanel = new LocalMapPanel(localMap, camera);
-
-        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(localMapPanel.getjPanel(), localMap, camera, localMapPanel, buildingFactory);
-        new CursorTrackingIntent(localMapPanel, localMapPanel.getjPanel());
-        new CameraControlIntent(camera, localMapPanel.getjPanel());
-
-        ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(
-                localMap,
-                camera,
-                localMapPanel.getjPanel()
-        );
-        viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
-
-        localMapPanel.registerIntent(viewBuildingDetailsIntent);
-
-        jFrame.getContentPane().add(localMapPanel.getjPanel());
+        RootPanel rootPanel = new RootPanel();
+        jFrame.getContentPane().add(rootPanel.getjPanel());
 
         jFrame.addWindowListener(
                 new WindowAdapter() {
@@ -71,18 +50,7 @@ public class TowerGraphics {
         jFrame.setVisible(true);
     }
 
-    private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
-        Building blacksmith = buildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
-        blacksmith.addItem(itemFactory.createByName("Iron Ore"));
-        localMap.addBuilding(blacksmith);
-        localMap.addBuilding(buildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
-    }
-
     public void repaint() {
         jFrame.repaint();
-    }
-
-    public void pack() {
-        jFrame.pack();
     }
 }

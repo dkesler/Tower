@@ -26,9 +26,10 @@ public class Camera {
 
 
     public GridCoord convertEventToGrid(MouseEvent e) {
+        return convertPointToGrid(e.getPoint());
+    }
 
-        Point2D src = new Point(e.getX(), e.getY());
-
+    public GridCoord convertPointToGrid(Point2D src) {
         try {
             Point2D dest = getCameraTransform().inverseTransform(src, null);
             return GridCoord.fromPixels(dest.getX(), dest.getY());

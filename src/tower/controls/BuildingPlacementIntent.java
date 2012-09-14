@@ -18,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 public class BuildingPlacementIntent extends DrawableIntent {
     private String name;
@@ -60,20 +62,24 @@ public class BuildingPlacementIntent extends DrawableIntent {
     }
 
     @Override
-    public void draw(Graphics2D g2, GridCoord cursor) {
+    public void draw(Graphics2D g2, Point2D cursor) {
         if (active)
         {
+            g2.setTransform(camera.getCameraTransform());
+            GridCoord cursorOnGrid = camera.convertPointToGrid(cursor);
             if (isValidPlacement) {
                 g2.setColor(new Color(0, 255, 0));
             } else {
                 g2.setColor(new Color(255, 0, 0));
             }
             g2.drawRect(
-                    cursor.xPixels,
-                    cursor.yPixels,
+                    cursorOnGrid.xPixels,
+                    cursorOnGrid.yPixels,
                     prototype.width * GridUtils.UNIT_SIZE,
                     prototype.height * GridUtils.UNIT_SIZE
             );
+
+            g2.setTransform(new AffineTransform());
         }
     }
 

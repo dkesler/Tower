@@ -1,59 +1,52 @@
 package tower.graphics;
 
-import tower.controls.ViewBuildingDetailsIntent;
-import tower.entity.buiildings.BuildingFactory;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
-import tower.controls.CursorTrackingIntent;
-import tower.controls.DrawableIntent;
+import tower.controls.ViewBuildingDetailsIntent;
+import tower.entity.buiildings.Building;
+import tower.entity.buiildings.BuildingFactory;
+import tower.entity.items.ItemFactory;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
 import javax.swing.JPanel;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
-public class LocalMapPanel {
+public class LocalMapPanel extends Panel {
 
-    final private Set<DrawableIntent> intents = new LinkedHashSet<>();
     final private Camera camera;
-    final private JPanel jPanel;
+    final private LocalMap localMap;
 
     private GridCoord mouseCoord;
 
-    public LocalMapPanel(final LocalMap localMap, final Camera camera) {
-        this.camera = camera;
+    public LocalMapPanel(JPanel jPanel) {
+        this.camera = new Camera();
+        this.localMap = new LocalMap();
 
-        jPanel = new JPanel() {
-            @Override
-            public void paint(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
+        CameraControlIntent cameraControlIntent = new CameraControlIntent(camera, jPanel);
+        BuildingFactory buildingFactory = new BuildingFactory();
+        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
+        ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(localMap, camera, jPanel);
+        viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
 
-                g2.setTransform(camera.getCameraTransform());
+        registerIntent(viewBuildingDetailsIntent);
 
-                localMap.draw(g2);
-
-                for (DrawableIntent drawableIntent : intents) {
-                    drawableIntent.draw(g2, mouseCoord);
-                }
-            }
-        };
-
-        jPanel.setFocusable(true);
+        initialize(localMap, buildingFactory, new ItemFactory());
     }
 
-    public void setMouseCoord(MouseEvent e) {
-        this.mouseCoord = camera.convertEventToGrid(e);
+    @Override
+    protected void drawImplSpecific(Graphics2D graphics2D, Point2D mouseCoord) {
+        graphics2D.setTransform(camera.getCameraTransform());
+        localMap.draw(graphics2D);
+        graphics2D.setTransform(new AffineTransform());
     }
 
-    public void registerIntent(DrawableIntent drawableIntent) {
-        intents.add(drawableIntent);
-    }
-
-    public JPanel getjPanel() {
-        return jPanel;
+    private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
+        Building blacksmith = buildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
+        blacksmith.addItem(itemFactory.createByName("Iron Ore"));
+        localMap.addBuilding(blacksmith);
+        localMap.addBuilding(buildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
     }
 }

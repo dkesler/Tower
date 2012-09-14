@@ -2,13 +2,13 @@ package tower.controls;
 
 import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
-import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 public class ViewBuildingDetailsIntent extends DrawableIntent {
 
@@ -40,7 +40,7 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
     }
 
     @Override
-    public void draw(Graphics2D graphics, GridCoord cursor) {
+    public void draw(Graphics2D graphics, Point2D cursor) {
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 

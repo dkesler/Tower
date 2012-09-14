@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ContextMenuIntent extends Intent {
-    private final JPanel jPanel;
     private final LocalMap localMap;
     private final Camera camera;
 
@@ -19,11 +18,10 @@ public class ContextMenuIntent extends Intent {
     public final BuildingPlacementIntent buildingPlacementIntent;
 
     public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel, BuildingFactory buildingFactory) {
-        this.jPanel = jPanel;
         this.localMap = localMap;
         this.camera = camera;
 
-        destroyBuildingIntent = new DestroyBuildingIntent(jPanel, localMapPanel, localMap);
+        destroyBuildingIntent = new DestroyBuildingIntent(jPanel, localMapPanel, localMap, camera);
         buildingPlacementIntent = new BuildingPlacementIntent(localMap, buildingFactory, localMapPanel, jPanel, camera);
 
         jPanel.addMouseListener(this);

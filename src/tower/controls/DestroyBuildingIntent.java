@@ -1,8 +1,8 @@
 package tower.controls;
 
 import tower.entity.buiildings.Building;
+import tower.graphics.Camera;
 import tower.graphics.LocalMapPanel;
-import tower.grid.GridCoord;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -17,6 +17,8 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 public class DestroyBuildingIntent extends DrawableIntent {
     private Building selected;
@@ -29,15 +31,17 @@ public class DestroyBuildingIntent extends DrawableIntent {
     final private JMenu destroyBuildingMenu;
     final private LocalMap localMap;
     final private DestroyBuildingIntent thisIntent;
+    final private Camera camera;
 
     final ActionListener destroyBuildingActionListener;
 
-    public DestroyBuildingIntent(JPanel jPanel, LocalMapPanel localMapPanel, LocalMap localMap) {
+    public DestroyBuildingIntent(JPanel jPanel, LocalMapPanel localMapPanel, LocalMap localMap, Camera camera) {
         this.thisIntent = this;
         this.jPanel = jPanel;
         this.localMapPanel = localMapPanel;
         this.localMap = localMap;
         this.destroyBuildingMenu = new JMenu();
+        this.camera = camera;
 
         this.localMapPanel.registerIntent(this);
 
@@ -51,12 +55,13 @@ public class DestroyBuildingIntent extends DrawableIntent {
     }
 
     @Override
-    public void draw(Graphics2D g2, GridCoord cursor) {
+    public void draw(Graphics2D g2, Point2D cursor) {
         if (isActive) {
 
             frames++;
 
             if (frames < FRAMES_PER_BLINK) {
+                g2.setTransform(camera.getCameraTransform());
                 g2.setColor(new Color(255, 0, 0));
 
                 g2.drawRect(
@@ -65,6 +70,7 @@ public class DestroyBuildingIntent extends DrawableIntent {
                         selected.width() * GridUtils.UNIT_SIZE,
                         selected.height() * GridUtils.UNIT_SIZE
                 );
+                g2.setTransform(new AffineTransform());
             }
 
             if (frames == 2 * FRAMES_PER_BLINK) {
