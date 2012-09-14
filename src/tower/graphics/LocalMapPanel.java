@@ -19,21 +19,10 @@ public class LocalMapPanel extends Panel {
     final private Camera camera;
     final private LocalMap localMap;
 
-    private GridCoord mouseCoord;
-
-    public LocalMapPanel(JPanel jPanel) {
+    public LocalMapPanel() {
         this.camera = new Camera();
         this.localMap = new LocalMap();
-
-        CameraControlIntent cameraControlIntent = new CameraControlIntent(camera, jPanel);
-        BuildingFactory buildingFactory = new BuildingFactory();
-        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMap, camera, this, buildingFactory);
-        ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(localMap, camera, jPanel);
-        viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
-
-        registerIntent(viewBuildingDetailsIntent);
-
-        initialize(localMap, buildingFactory, new ItemFactory());
+        this.visible = true;
     }
 
     @Override
@@ -43,10 +32,11 @@ public class LocalMapPanel extends Panel {
         graphics2D.setTransform(new AffineTransform());
     }
 
-    private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
-        Building blacksmith = buildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
-        blacksmith.addItem(itemFactory.createByName("Iron Ore"));
-        localMap.addBuilding(blacksmith);
-        localMap.addBuilding(buildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public LocalMap getLocalMap() {
+        return localMap;
     }
 }

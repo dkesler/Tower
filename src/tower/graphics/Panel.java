@@ -11,13 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Panel {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private int z;
-    private Color color = Color.BLACK;
-    private boolean visible;
+    protected int x;
+    protected int y;
+    protected int width;
+    protected int height;
+    protected Color color = Color.BLACK;
+    protected boolean visible;
 
     protected final List<DrawableIntent> drawableIntents = new LinkedList<>();
     protected final List<Panel> subPanels = new LinkedList<>();
@@ -27,16 +26,46 @@ public abstract class Panel {
     }
 
     public final void draw(Graphics2D graphics2D, Point2D mouseCoord) {
-        for (Panel subPanel : subPanels) {
-            subPanel.draw(graphics2D, mouseCoord);
-        }
+        if (visible) {
+            for (Panel subPanel : subPanels) {
+                subPanel.draw(graphics2D, mouseCoord);
+            }
 
-        drawImplSpecific(graphics2D, mouseCoord);
+            drawImplSpecific(graphics2D, mouseCoord);
 
-        for (DrawableIntent drawableIntent : drawableIntents) {
-            drawableIntent.draw(graphics2D, mouseCoord);
+            for (DrawableIntent drawableIntent : drawableIntents) {
+                drawableIntent.draw(graphics2D, mouseCoord);
+            }
         }
     }
 
     protected abstract void drawImplSpecific(Graphics2D graphics2D, Point2D mouseCoord);
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }

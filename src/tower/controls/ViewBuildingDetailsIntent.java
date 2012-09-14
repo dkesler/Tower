@@ -1,6 +1,7 @@
 package tower.controls;
 
 import tower.entity.buiildings.Building;
+import tower.graphics.BuildingDetailsPanel;
 import tower.graphics.Camera;
 import tower.map.LocalMap;
 
@@ -16,16 +17,17 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
 
     private final LocalMap localMap;
     private final Camera camera;
-    private final JPanel jPanel;
+    private final BuildingDetailsPanel buildingDetailsPanel;
 
     public ViewBuildingDetailsIntent(
             LocalMap localMap,
             Camera camera,
-            JPanel jPanel
+            JPanel jPanel,
+            BuildingDetailsPanel buildingDetailsPanel
     ) {
         this.localMap = localMap;
         this.camera = camera;
-        this.jPanel = jPanel;
+        this.buildingDetailsPanel = buildingDetailsPanel;
 
         jPanel.addMouseListener(this);
     }
@@ -35,6 +37,11 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         if (isActivatable()) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+                if (selected != null) {
+                    buildingDetailsPanel.setVisible(true);
+                } else {
+                    buildingDetailsPanel.setVisible(false);
+                }
             }
         }
     }
@@ -44,8 +51,8 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 
-            int panelY = jPanel.getY();
-            int panelX = jPanel.getX();
+            int panelY = buildingDetailsPanel.getY();
+            int panelX = buildingDetailsPanel.getX();
 
             int height = panelY + 80;
 
