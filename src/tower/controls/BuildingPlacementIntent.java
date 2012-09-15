@@ -22,21 +22,18 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class BuildingPlacementIntent extends DrawableIntent {
-    private String name;
     private BuildingPrototype prototype;
     private boolean active;
     private boolean isValidPlacement;
 
     final private LocalMap localMap;
-    final private BuildingFactory buildingFactory;
     final private JMenu createBuildingMenu;
     final private LocalMapPanel localMapPanel;
     final private JPanel jPanel;
     final private Camera camera;
 
-    public BuildingPlacementIntent(LocalMap localMap, BuildingFactory buildingFactory, LocalMapPanel localMapPanel, JPanel jPanel, Camera camera) {
+    public BuildingPlacementIntent(LocalMap localMap, LocalMapPanel localMapPanel, JPanel jPanel, Camera camera) {
         this.localMap = localMap;
-        this.buildingFactory = buildingFactory;
         this.createBuildingMenu = new JMenu();
         this.localMapPanel = localMapPanel;
         this.jPanel = jPanel;
@@ -45,15 +42,14 @@ public class BuildingPlacementIntent extends DrawableIntent {
         this.localMapPanel.registerIntent(this);
 
         final BuildingPlacementIntent thisIntent = this;
-        for (final String building : buildingFactory.getBuildingNames()) {
+        for (final String building : BuildingFactory.getBuildingNames()) {
             JMenuItem menuItem = new JMenuItem(building);
             createBuildingMenu.add(menuItem);
             menuItem.addActionListener(
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            name = building;
-                            prototype = thisIntent.buildingFactory.getPrototype(building);
+                            prototype = BuildingFactory.getPrototype(building);
                             active = true;
                         }
                     }
@@ -102,12 +98,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
         } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && localMapPanel.within(e.getPoint())) {
             active = false;
-            localMap.addBuilding(
-                    buildingFactory.createByName(
-                            name,
-                            camera.convertEventToGrid(e)
-                    )
-            );
+            localMap.addBuilding(new Building(prototype, camera.convertEventToGrid(e)));
         }
     }
 

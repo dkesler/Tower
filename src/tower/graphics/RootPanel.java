@@ -44,22 +44,21 @@ public class RootPanel extends Panel {
         subPanels.add(buildingDetailsPanel);
 
         CameraControlIntent cameraControlIntent = new CameraControlIntent(localMapPanel.getCamera(), jPanel);
-        BuildingFactory buildingFactory = new BuildingFactory();
-        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMapPanel.getLocalMap(), localMapPanel.getCamera(), localMapPanel, new BuildingFactory());
+        ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMapPanel.getLocalMap(), localMapPanel.getCamera(), localMapPanel);
         ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), jPanel, buildingDetailsPanel);
         viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
         buildingDetailsPanel.registerIntent(viewBuildingDetailsIntent);
 
-        initialize(localMapPanel.getLocalMap(), buildingFactory, new ItemFactory());
+        initialize(localMapPanel.getLocalMap());
 
          new CursorTrackingIntent(this, jPanel);
     }
 
-    private void initialize(LocalMap localMap, BuildingFactory buildingFactory, ItemFactory itemFactory) {
-        Building blacksmith = buildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
-        blacksmith.addItem(itemFactory.createByName("Iron Ore"));
+    private void initialize(LocalMap localMap) {
+        Building blacksmith = BuildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
+        blacksmith.addItem(ItemFactory.createByName("Iron Ore"));
         localMap.addBuilding(blacksmith);
-        localMap.addBuilding(buildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
+        localMap.addBuilding(BuildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
     }
 
     public JPanel getjPanel() {

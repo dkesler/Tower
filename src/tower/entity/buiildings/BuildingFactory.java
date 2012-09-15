@@ -16,16 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class BuildingFactory {
-    Map<String, BuildingPrototype> prototypes;
+    private static final Map<String, BuildingPrototype> prototypes = new EntityPrototypeLoader<>(
+            "/details/buildings",
+            new BuildingPrototypeBuilderFactory()
+    ).getPrototypes();
 
-    public BuildingFactory() {
-        prototypes = new EntityPrototypeLoader<BuildingPrototype>(
-                "/details/buildings",
-                new BuildingPrototypeBuilderFactory()
-        ).getPrototypes();
-    }
+    private BuildingFactory() {}
 
-    public Building createByName(String name, GridCoord gridCoord) {
+    public static Building createByName(String name, GridCoord gridCoord) {
         BuildingPrototype prototype = getPrototype(name);
 
         return new Building(
@@ -34,7 +32,7 @@ public class BuildingFactory {
         );
     }
 
-    public BuildingPrototype getPrototype(String name) {
+    public static BuildingPrototype getPrototype(String name) {
         if (!prototypes.containsKey(name)) {
             throw new RuntimeException("No building prototype for [" + name + "]");
         }
@@ -42,7 +40,7 @@ public class BuildingFactory {
         return prototypes.get(name);
     }
 
-    public Collection<String> getBuildingNames() {
+    public static Collection<String> getBuildingNames() {
         return prototypes.keySet();
     }
 }

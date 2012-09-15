@@ -17,12 +17,12 @@ public class ContextMenuIntent extends Intent {
     private final DestroyBuildingIntent destroyBuildingIntent;
     public final BuildingPlacementIntent buildingPlacementIntent;
 
-    public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel, BuildingFactory buildingFactory) {
+    public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel) {
         this.localMap = localMap;
         this.camera = camera;
 
         destroyBuildingIntent = new DestroyBuildingIntent(jPanel, localMapPanel, localMap, camera);
-        buildingPlacementIntent = new BuildingPlacementIntent(localMap, buildingFactory, localMapPanel, jPanel, camera);
+        buildingPlacementIntent = new BuildingPlacementIntent(localMap, localMapPanel, jPanel, camera);
 
         jPanel.addMouseListener(this);
         jPanel.addMouseMotionListener(this);
