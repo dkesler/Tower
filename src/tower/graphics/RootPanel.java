@@ -9,6 +9,7 @@ import tower.entity.buiildings.BuildingFactory;
 import tower.entity.items.ItemFactory;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
+import tower.saves.SaveParser;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -55,10 +56,10 @@ public class RootPanel extends Panel {
     }
 
     private void initialize(LocalMap localMap) {
-        Building blacksmith = BuildingFactory.createByName("Blacksmith", GridCoord.fromUnits(3, 3));
-        blacksmith.addItem(ItemFactory.createByName("Iron Ore"));
-        localMap.addBuilding(blacksmith);
-        localMap.addBuilding(BuildingFactory.createByName("Leatherworker", GridCoord.fromUnits(8, 8)));
+        SaveParser saveParser = new SaveParser("/saves/1.sav");
+        for (Building building : saveParser.getBuildings()) {
+            localMap.addBuilding(building);
+        }
     }
 
     public JPanel getjPanel() {

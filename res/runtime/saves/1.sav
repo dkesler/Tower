@@ -1,0 +1,20 @@
+{
+    "type" : "Blacksmith",
+    "location" : {"x" : 3, "y" : 3},
+    "items" : [
+        {
+            "type" : "Iron Ore",
+            "quantity" : 2
+        }
+    ]
+}
+
+{
+    "type" : "Leatherworker",
+    "location" : {"x" : 8, "y" : 8},
+    "items" : []
+}
+
+
+
+
