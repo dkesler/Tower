@@ -4,18 +4,13 @@ import tower.entity.buiildings.Building;
 import tower.entity.buiildings.BuildingFactory;
 import tower.entity.buiildings.BuildingPrototype;
 import tower.graphics.Camera;
-import tower.graphics.LocalMapPanel;
+import tower.graphics.MenuPanel;
 import tower.grid.GridCoord;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -27,34 +22,17 @@ public class BuildingPlacementIntent extends DrawableIntent {
     private boolean isValidPlacement;
 
     final private LocalMap localMap;
-    final private JMenu createBuildingMenu;
-    private JPanel jPanel;
     final private Camera camera;
+    final private MenuPanel menuPanel;
 
     public BuildingPlacementIntent(LocalMap localMap, Camera camera) {
         this.localMap = localMap;
-        this.createBuildingMenu = new JMenu();
         this.camera = camera;
+        this.menuPanel = new MenuPanel();
 
-        final BuildingPlacementIntent thisIntent = this;
-        for (final String building : BuildingFactory.getBuildingNames()) {
-            JMenuItem menuItem = new JMenuItem(building);
-            createBuildingMenu.add(menuItem);
-            menuItem.addActionListener(
-                    new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            prototype = BuildingFactory.getPrototype(building);
-                            active = true;
-                        }
-                    }
-            );
+        for (String building : BuildingFactory.getBuildingNames()) {
+            menuPanel.addOption(building);
         }
-    }
-
-    @Override
-    public void registerListeners(JPanel jPanel) {
-        this.jPanel = jPanel;
     }
 
     @Override
@@ -77,6 +55,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
             g2.setTransform(new AffineTransform());
         }
+        menuPanel.draw(g2, cursor);
     }
 
     private void updateValidity(GridCoord gridCoord) {
@@ -94,11 +73,21 @@ public class BuildingPlacementIntent extends DrawableIntent {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (!active && e.getButton() == MouseEvent.BUTTON3) {
-            jPanel.add(createBuildingMenu);
-            createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
+            menuPanel.setVisible(true);
+            menuPanel.setX(e.getX());
+            menuPanel.setY(e.getY());
         } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && host.contains(e.getPoint())) {
             active = false;
             localMap.addBuilding(new Building(prototype, camera.convertEventToGrid(e)));
+        } else if (e.getButton() == MouseEvent.BUTTON1 && !active && menuPanel.contains(e.getPoint())) {
+            String selectedOption = menuPanel.getSelectedOption(e.getPoint());
+            if (selectedOption != null) {
+                prototype = BuildingFactory.getPrototype(selectedOption);
+                active = true;
+            }
+            menuPanel.setVisible(false);
+        } else if (e.getButton() == MouseEvent.BUTTON1 && !active && !menuPanel.contains(e.getPoint())) {
+            menuPanel.setVisible(false);
         }
     }
 
@@ -119,5 +108,9 @@ public class BuildingPlacementIntent extends DrawableIntent {
     @Override
     public boolean isActive() {
         return active;
+    }
+
+    public void closeMenu() {
+        menuPanel.setVisible(false);
     }
 }

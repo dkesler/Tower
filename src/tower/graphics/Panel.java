@@ -80,7 +80,7 @@ public abstract class Panel {
     }
 
     public boolean contains(Point2D point) {
-        return point.getX() >= x && point.getX() <= x + width && point.getY() >= y && point.getY() <= y + height;
+        return visible && point.getX() >= x && point.getX() <= x + width && point.getY() >= y && point.getY() <= y + height;
     }
 
     public void reflow(Graphics2D graphics2D) {}

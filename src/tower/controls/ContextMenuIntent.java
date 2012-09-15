@@ -52,8 +52,10 @@ public class ContextMenuIntent extends Intent {
                 if (selected != null) {
                     destroyBuildingIntent.setSelectedBuilding(selected);
                     destroyBuildingIntent.mouseClicked(e);
+                    buildingPlacementIntent.closeMenu();
                 } else {
                     buildingPlacementIntent.mouseClicked(e);
+                    destroyBuildingIntent.closeMenu();
                 }
             } else {
                 if (destroyBuildingIntent.isActive()) {

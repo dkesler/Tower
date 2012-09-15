@@ -19,7 +19,7 @@ public class MenuPanel extends Panel {
 
     public void addOption(String option) {
         options.add(option);
-        height = options.size() * 16 + 5;
+        height = options.size() * 16 + 8;
     }
 
     @Override
@@ -28,15 +28,25 @@ public class MenuPanel extends Panel {
         int x = this.x + 5;
         int y = this.y + 16;
 
-        graphics2D.setColor(Color.WHITE);
+        String selectedOption = getSelectedOption(mouseCoord);
         for (String option : options) {
+            if (option.equals(selectedOption)) {
+                graphics2D.setColor(Color.LIGHT_GRAY);
+                graphics2D.fillRect(x, y + 4, width - 10, -16);
+            }
+            graphics2D.setColor(Color.WHITE);
             graphics2D.drawString(option, x, y);
             y += 16;
         }
     }
 
     public String getSelectedOption(Point2D mouseCoord) {
-        int idx = (int) ((mouseCoord.getY() - this.getY())/16);
+
+        if (mouseCoord.getX() < x || mouseCoord.getX() > x + width) {
+            return null;
+        }
+
+        int idx = (int) ((mouseCoord.getY() - y)/16);
         if (idx < 0 || idx >= options.size()) {
             return null;
         } else {

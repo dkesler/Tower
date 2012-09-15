@@ -96,4 +96,10 @@ public class DestroyBuildingIntent extends DrawableIntent {
         }
 
     }
+
+    public void closeMenu() {
+        popup.setVisible(false);
+        selected = null;
+        isActive = false;
+    }
 }
