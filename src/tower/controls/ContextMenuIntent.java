@@ -4,6 +4,7 @@ import tower.entity.buiildings.Building;
 import tower.entity.buiildings.BuildingFactory;
 import tower.graphics.Camera;
 import tower.graphics.LocalMapPanel;
+import tower.graphics.Panel;
 import tower.map.LocalMap;
 
 import javax.swing.JPanel;
@@ -17,17 +18,32 @@ public class ContextMenuIntent extends Intent {
     private final DestroyBuildingIntent destroyBuildingIntent;
     public final BuildingPlacementIntent buildingPlacementIntent;
 
-    public ContextMenuIntent(JPanel jPanel, LocalMap localMap, Camera camera, LocalMapPanel localMapPanel) {
+    public ContextMenuIntent(LocalMap localMap, Camera camera) {
         this.localMap = localMap;
         this.camera = camera;
 
-        destroyBuildingIntent = new DestroyBuildingIntent(jPanel, localMapPanel, localMap, camera);
-        buildingPlacementIntent = new BuildingPlacementIntent(localMap, localMapPanel, jPanel, camera);
+        destroyBuildingIntent = new DestroyBuildingIntent( localMap, camera);
+        buildingPlacementIntent = new BuildingPlacementIntent(localMap,  camera);
 
+        }
+
+    @Override
+    public void registerListeners(JPanel jPanel) {
         jPanel.addMouseListener(this);
         jPanel.addMouseMotionListener(this);
         jPanel.addKeyListener(this);
+
+        destroyBuildingIntent.registerListeners(jPanel);
+        buildingPlacementIntent.registerListeners(jPanel);
     }
+
+    @Override
+    public void attachTo(Panel host) {
+        super.attachTo(host);
+        destroyBuildingIntent.attachTo(host);
+        buildingPlacementIntent.attachTo(host);
+    }
+
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {

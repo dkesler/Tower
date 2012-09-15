@@ -16,11 +16,13 @@ import java.util.List;
 public class UseRecipeIntent extends DrawableIntent {
 
     private final BuildingDetailsPanel buildingDetailsPanel;
-    private final BuildingRecipePanel buildingRecipePanel;
 
-    public UseRecipeIntent(BuildingDetailsPanel buildingDetailsPanel, BuildingRecipePanel buildingRecipePanel, JPanel jPanel) {
+    public UseRecipeIntent(BuildingDetailsPanel buildingDetailsPanel) {
         this.buildingDetailsPanel = buildingDetailsPanel;
-        this.buildingRecipePanel = buildingRecipePanel;
+    }
+
+    @Override
+    public void registerListeners(JPanel jPanel) {
         jPanel.addMouseListener(this);
     }
 
@@ -29,8 +31,8 @@ public class UseRecipeIntent extends DrawableIntent {
         Building selected = buildingDetailsPanel.getSelected();
         if (selected != null) {
 
-            int y = buildingRecipePanel.getY() + 16;
-            int x = buildingRecipePanel.getX() + 5;
+            int y = host.getY() + 16;
+            int x = host.getX() + 5;
 
             Collection<Recipe> recipes = selected.getRecipies();
 
@@ -50,7 +52,7 @@ public class UseRecipeIntent extends DrawableIntent {
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1 && buildingDetailsPanel.getSelected() != null) {
             if (buildingDetailsPanel.contains(e.getPoint())) {
-                int recipeIdx = (e.getY() - buildingRecipePanel.getY()) / 16;
+                int recipeIdx = (e.getY() - host.getY()) / 16;
                 List<Recipe> recipies = buildingDetailsPanel.getSelected().getRecipies();
 
                 if (recipeIdx >= 0 && recipeIdx < recipies.size()) {

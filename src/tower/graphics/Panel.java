@@ -1,9 +1,8 @@
 package tower.graphics;
 
 import tower.controls.DrawableIntent;
-import tower.grid.GridCoord;
+import tower.controls.Intent;
 
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -22,7 +21,7 @@ public abstract class Panel {
     protected final List<DrawableIntent> drawableIntents = new LinkedList<>();
     protected final List<Panel> subPanels = new LinkedList<>();
 
-    public final void registerIntent(DrawableIntent intent) {
+    public final void registerDrawableIntent(DrawableIntent intent) {
         drawableIntents.add(intent);
     }
 

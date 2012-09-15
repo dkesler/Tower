@@ -28,18 +28,13 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     final private LocalMap localMap;
     final private JMenu createBuildingMenu;
-    final private LocalMapPanel localMapPanel;
-    final private JPanel jPanel;
+    private JPanel jPanel;
     final private Camera camera;
 
-    public BuildingPlacementIntent(LocalMap localMap, LocalMapPanel localMapPanel, JPanel jPanel, Camera camera) {
+    public BuildingPlacementIntent(LocalMap localMap, Camera camera) {
         this.localMap = localMap;
         this.createBuildingMenu = new JMenu();
-        this.localMapPanel = localMapPanel;
-        this.jPanel = jPanel;
         this.camera = camera;
-
-        this.localMapPanel.registerIntent(this);
 
         final BuildingPlacementIntent thisIntent = this;
         for (final String building : BuildingFactory.getBuildingNames()) {
@@ -55,6 +50,11 @@ public class BuildingPlacementIntent extends DrawableIntent {
                     }
             );
         }
+    }
+
+    @Override
+    public void registerListeners(JPanel jPanel) {
+        this.jPanel = jPanel;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
         if (!active && e.getButton() == MouseEvent.BUTTON3) {
             jPanel.add(createBuildingMenu);
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
-        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && localMapPanel.contains(e.getPoint())) {
+        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && host.contains(e.getPoint())) {
             active = false;
             localMap.addBuilding(new Building(prototype, camera.convertEventToGrid(e)));
         }

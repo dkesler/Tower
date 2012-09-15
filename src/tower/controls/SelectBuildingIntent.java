@@ -20,13 +20,15 @@ public class SelectBuildingIntent extends Intent {
     public SelectBuildingIntent(
             LocalMap localMap,
             Camera camera,
-            JPanel jPanel,
             BuildingDetailsPanel buildingDetailsPanel
     ) {
         this.localMap = localMap;
         this.camera = camera;
         this.buildingDetailsPanel = buildingDetailsPanel;
+    }
 
+    @Override
+    public void registerListeners(JPanel jPanel) {
         jPanel.addMouseListener(this);
     }
 

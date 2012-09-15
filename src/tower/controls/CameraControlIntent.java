@@ -11,17 +11,16 @@ import java.awt.event.MouseWheelEvent;
 public class CameraControlIntent extends Intent {
 
     private final Camera camera;
-    private final JPanel jPanel;
-    private final LocalMapPanel localMapPanel;
 
     private Point dragStart;
     private boolean dragging = false;
 
-    public CameraControlIntent(Camera camera, JPanel jPanel, LocalMapPanel localMapPanel) {
+    public CameraControlIntent(Camera camera) {
         this.camera = camera;
-        this.jPanel = jPanel;
-        this.localMapPanel = localMapPanel;
+    }
 
+    @Override
+    public void registerListeners(JPanel jPanel) {
         jPanel.addMouseMotionListener(this);
         jPanel.addMouseListener(this);
         jPanel.addMouseWheelListener(this);
@@ -29,7 +28,7 @@ public class CameraControlIntent extends Intent {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1 && localMapPanel.contains(e.getPoint())) {
+        if (e.getButton() == MouseEvent.BUTTON1 && host.contains(e.getPoint())) {
             dragging = true;
             dragStart = e.getPoint();
         }
@@ -52,7 +51,7 @@ public class CameraControlIntent extends Intent {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (localMapPanel.contains(e.getPoint())) {
+        if (host.contains(e.getPoint())) {
             camera.zoom(e.getWheelRotation());
         }
     }

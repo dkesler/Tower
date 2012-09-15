@@ -1,5 +1,7 @@
 package tower.controls;
 
+import tower.graphics.Panel;
+
 import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,15 +16,21 @@ import java.util.List;
 public abstract class Intent implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 
     private List<Intent> incompatibleIntents = new LinkedList<>();
+    protected Panel host;
 
     public boolean isActive() {
         return true;
     }
 
-    public Intent registerIncompatibleIntent(Intent incompatibleIntent) {
+    public void registerIncompatibleIntent(Intent incompatibleIntent) {
         incompatibleIntents.add(incompatibleIntent);
-        return this;
     }
+
+    public void attachTo(Panel host) {
+        this.host = host;
+    }
+
+    public void registerListeners(JPanel jPanel) {};
 
     protected boolean isActivatable() {
 

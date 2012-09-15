@@ -11,11 +11,9 @@ import java.awt.geom.Point2D;
 public class ViewBuildingDetailsIntent extends DrawableIntent {
 
     private final BuildingDetailsPanel buildingDetailsPanel;
-    private final BuildingInventoryPanel buildingInventoryPanel;
 
-    public ViewBuildingDetailsIntent(BuildingDetailsPanel buildingDetailsPanel, BuildingInventoryPanel buildingInventoryPanel) {
+    public ViewBuildingDetailsIntent(BuildingDetailsPanel buildingDetailsPanel) {
         this.buildingDetailsPanel = buildingDetailsPanel;
-        this.buildingInventoryPanel = buildingInventoryPanel;
     }
 
     @Override
@@ -24,8 +22,8 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 
-            int y = buildingInventoryPanel.getY() + 16;
-            int x = buildingInventoryPanel.getX() + 5;
+            int y = host.getY() + 16;
+            int x = host.getX() + 5;
 
             graphics.drawString(String.format("%-20s %s", "Item", "Count"), x, y);
 

@@ -20,8 +20,12 @@ public class BuildingDetailsPanel extends Panel {
 
         buildingRecipePanel = new BuildingRecipePanel();
 
-        buildingRecipePanel.registerIntent(new UseRecipeIntent(this, buildingRecipePanel, jPanel));
-        buildingInventoryPanel.registerIntent(new ViewBuildingDetailsIntent(this, buildingInventoryPanel));
+        UseRecipeIntent userRecipeIntent = new UseRecipeIntent(this);
+        userRecipeIntent.attachTo(buildingRecipePanel);
+        userRecipeIntent.registerListeners(jPanel);
+
+        ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(this);
+        viewBuildingDetailsIntent.attachTo(buildingInventoryPanel);
 
         subPanels.add(buildingInventoryPanel);
         subPanels.add(buildingRecipePanel);

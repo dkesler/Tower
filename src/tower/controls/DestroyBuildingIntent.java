@@ -2,7 +2,6 @@ package tower.controls;
 
 import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
-import tower.graphics.LocalMapPanel;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -26,8 +25,7 @@ public class DestroyBuildingIntent extends DrawableIntent {
     private static final int FRAMES_PER_BLINK = 30;
     private int frames;
 
-    final private JPanel jPanel;
-    final private LocalMapPanel localMapPanel;
+    private JPanel jPanel;
     final private JMenu destroyBuildingMenu;
     final private LocalMap localMap;
     final private DestroyBuildingIntent thisIntent;
@@ -35,15 +33,11 @@ public class DestroyBuildingIntent extends DrawableIntent {
 
     final ActionListener destroyBuildingActionListener;
 
-    public DestroyBuildingIntent(JPanel jPanel, LocalMapPanel localMapPanel, LocalMap localMap, Camera camera) {
+    public DestroyBuildingIntent(LocalMap localMap, Camera camera) {
         this.thisIntent = this;
-        this.jPanel = jPanel;
-        this.localMapPanel = localMapPanel;
         this.localMap = localMap;
         this.destroyBuildingMenu = new JMenu();
         this.camera = camera;
-
-        this.localMapPanel.registerIntent(this);
 
         destroyBuildingActionListener = new ActionListener() {
             @Override
@@ -52,6 +46,11 @@ public class DestroyBuildingIntent extends DrawableIntent {
                 thisIntent.isActive = false;
             }
         };
+    }
+
+    @Override
+    public void registerListeners(JPanel jPanel) {
+        this.jPanel = jPanel;
     }
 
     @Override
