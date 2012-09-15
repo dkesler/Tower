@@ -46,16 +46,22 @@ public class ContextMenuIntent extends Intent {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            final Building selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
-            if (selected != null) {
-                destroyBuildingIntent.setSelectedBuilding(selected);
-                destroyBuildingIntent.mouseClicked(e);
+        if (host.contains(e.getPoint())) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                final Building selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+                if (selected != null) {
+                    destroyBuildingIntent.setSelectedBuilding(selected);
+                    destroyBuildingIntent.mouseClicked(e);
+                } else {
+                    buildingPlacementIntent.mouseClicked(e);
+                }
             } else {
-                buildingPlacementIntent.mouseClicked(e);
+                if (destroyBuildingIntent.isActive()) {
+                    destroyBuildingIntent.mouseClicked(e);
+                } else {
+                    buildingPlacementIntent.mouseClicked(e);
+                }
             }
-        } else {
-            buildingPlacementIntent.mouseClicked(e);
         }
     }
 

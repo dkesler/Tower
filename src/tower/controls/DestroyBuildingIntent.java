@@ -2,6 +2,8 @@ package tower.controls;
 
 import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
+import tower.graphics.MenuPanel;
+import tower.graphics.Panel;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -25,32 +27,22 @@ public class DestroyBuildingIntent extends DrawableIntent {
     private static final int FRAMES_PER_BLINK = 30;
     private int frames;
 
-    private JPanel jPanel;
-    final private JMenu destroyBuildingMenu;
     final private LocalMap localMap;
-    final private DestroyBuildingIntent thisIntent;
     final private Camera camera;
-
-    final ActionListener destroyBuildingActionListener;
+    final private MenuPanel popup;
 
     public DestroyBuildingIntent(LocalMap localMap, Camera camera) {
-        this.thisIntent = this;
         this.localMap = localMap;
-        this.destroyBuildingMenu = new JMenu();
         this.camera = camera;
+        this.popup = new MenuPanel();
+        popup.addOption("Destroy Building");
 
-        destroyBuildingActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                thisIntent.localMap.removeBuilding(thisIntent.selected);
-                thisIntent.isActive = false;
-            }
-        };
+        isActive = false;
     }
 
     @Override
-    public void registerListeners(JPanel jPanel) {
-        this.jPanel = jPanel;
+    public boolean isActive() {
+        return isActive;
     }
 
     @Override
@@ -75,6 +67,8 @@ public class DestroyBuildingIntent extends DrawableIntent {
             if (frames == 2 * FRAMES_PER_BLINK) {
                 frames = 0;
             }
+
+            popup.draw(g2, cursor);
         }
     }
 
@@ -84,32 +78,22 @@ public class DestroyBuildingIntent extends DrawableIntent {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        isActive = true;
-
-        destroyBuildingMenu.removeAll();
-        JMenuItem jMenuItem = new JMenuItem("Destroy " + selected.getName());
-        jMenuItem.addActionListener(destroyBuildingActionListener);
-        destroyBuildingMenu.add(jMenuItem);
-
-        JPopupMenu destroyPopup = destroyBuildingMenu.getPopupMenu();
-        destroyPopup.addPopupMenuListener(
-                new PopupMenuListener() {
-                    @Override
-                    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                    }
-
-                    @Override
-                    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    }
-
-                    @Override
-                    public void popupMenuCanceled(PopupMenuEvent e) {
-                        thisIntent.isActive = false;
-                    }
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            isActive = true;
+            popup.setX(e.getX());
+            popup.setY(e.getY());
+            popup.setVisible(true);
+        } else if (isActive) {
+            if (popup.contains(e.getPoint())) {
+                if (popup.getSelectedOption(e.getPoint()) != null) {
+                    isActive = false;
+                    localMap.removeBuilding(selected);
                 }
-        );
+            } else {
+                isActive = false;
+                popup.setVisible(false);
+            }
+        }
 
-        jPanel.add(destroyBuildingMenu);
-        destroyPopup.show(jPanel, e.getX(), e.getY());
     }
 }
