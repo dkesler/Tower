@@ -3,17 +3,13 @@ package tower.graphics;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
-import tower.controls.ViewBuildingDetailsIntent;
+import tower.controls.SelectBuildingIntent;
 import tower.entity.buiildings.Building;
-import tower.entity.buiildings.BuildingFactory;
-import tower.entity.items.ItemFactory;
-import tower.grid.GridCoord;
 import tower.map.LocalMap;
 import tower.saves.SaveParser;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -46,9 +42,8 @@ public class RootPanel extends Panel {
 
         CameraControlIntent cameraControlIntent = new CameraControlIntent(localMapPanel.getCamera(), jPanel, localMapPanel);
         ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMapPanel.getLocalMap(), localMapPanel.getCamera(), localMapPanel);
-        ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), jPanel, buildingDetailsPanel);
-        viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
-        buildingDetailsPanel.registerIntent(viewBuildingDetailsIntent);
+        SelectBuildingIntent selectBuildingIntent = new SelectBuildingIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), jPanel, buildingDetailsPanel);
+        selectBuildingIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
 
         initialize(localMapPanel.getLocalMap());
 
@@ -75,6 +70,7 @@ public class RootPanel extends Panel {
 
         buildingDetailsPanel.setHeight(jPanel.getHeight());
         buildingDetailsPanel.setX(jPanel.getWidth() - 200);
+        buildingDetailsPanel.reflow(graphics2D);
 
         this.draw(graphics2D, mouseCoord);
     }

@@ -1,15 +1,7 @@
 package tower.graphics;
 
-import tower.controls.CameraControlIntent;
-import tower.controls.ContextMenuIntent;
-import tower.controls.ViewBuildingDetailsIntent;
-import tower.entity.buiildings.Building;
-import tower.entity.buiildings.BuildingFactory;
-import tower.entity.items.ItemFactory;
-import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
-import javax.swing.JPanel;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
