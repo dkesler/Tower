@@ -1,8 +1,10 @@
 package tower.entity.items;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
 import tower.entity.EntityPrototypeBuilder;
 import tower.entity.PropertySetter;
+import tower.entity.StringPropertySetter;
 
 import java.util.Map;
 
@@ -10,19 +12,19 @@ public class ItemPrototypeBuilder implements EntityPrototypeBuilder<ItemPrototyp
 
     String name;
 
-    private static final PropertySetter<ItemPrototypeBuilder> namePropertySetter = new PropertySetter<ItemPrototypeBuilder>() {
+    private static final PropertySetter<ItemPrototypeBuilder, String> namePropertySetter = new StringPropertySetter<ItemPrototypeBuilder>() {
         @Override
-        public void setProperty(String value, ItemPrototypeBuilder itemPrototypeBuilder) {
-            itemPrototypeBuilder.name = value;
+        public void setProperty(JsonElement value, ItemPrototypeBuilder itemPrototypeBuilder) {
+            itemPrototypeBuilder.name = getPropertyValue(value);
         }
     };
 
-    private static final Map<String, PropertySetter<ItemPrototypeBuilder>> propertySetters =
-            ImmutableMap.<String, PropertySetter<ItemPrototypeBuilder>>builder()
+    private static final Map<String, PropertySetter<ItemPrototypeBuilder, ?>> propertySetters =
+            ImmutableMap.<String, PropertySetter<ItemPrototypeBuilder, ?>>builder()
                     .put("name", namePropertySetter)
                     .build();
 
-    public void addProperty(String key, String value) {
+    public void addProperty(String key, JsonElement value) {
         if (!propertySetters.containsKey(key)) {
             throw new RuntimeException("Exception occurred setting property [" + key + "]: no setter exists");
         }

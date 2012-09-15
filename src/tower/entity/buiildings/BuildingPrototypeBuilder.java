@@ -1,10 +1,12 @@
 package tower.entity.buiildings;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
 import tower.entity.EntityPrototypeBuilder;
 import tower.entity.FilePropertySetter;
 import tower.entity.IntegerPropertySetter;
 import tower.entity.PropertySetter;
+import tower.entity.StringPropertySetter;
 
 import java.io.File;
 import java.util.Map;
@@ -16,37 +18,37 @@ public class BuildingPrototypeBuilder implements EntityPrototypeBuilder<Building
     Integer height;
     File imageFile;
 
-    private static final PropertySetter<BuildingPrototypeBuilder> namePropertySetter = new PropertySetter<BuildingPrototypeBuilder>() {
+    private static final PropertySetter<BuildingPrototypeBuilder, String> namePropertySetter = new StringPropertySetter<BuildingPrototypeBuilder>() {
         @Override
-        public void setProperty(String value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
-            buildingPrototypeBuilder.name = value;
+        public void setProperty(JsonElement value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
+            buildingPrototypeBuilder.name = value.getAsString();
         }
     };
 
-    private static PropertySetter<BuildingPrototypeBuilder> widthPropertySetter = new IntegerPropertySetter<BuildingPrototypeBuilder>() {
+    private static PropertySetter<BuildingPrototypeBuilder, Integer> widthPropertySetter = new IntegerPropertySetter<BuildingPrototypeBuilder>() {
         @Override
-        public void setProperty(String value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
-            buildingPrototypeBuilder.width = getIntValue(value);
+        public void setProperty(JsonElement value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
+            buildingPrototypeBuilder.width = getPropertyValue(value);
         }
     };
 
-    private static PropertySetter<BuildingPrototypeBuilder> heightPropertySetter = new IntegerPropertySetter<BuildingPrototypeBuilder>() {
+    private static PropertySetter<BuildingPrototypeBuilder, Integer> heightPropertySetter = new IntegerPropertySetter<BuildingPrototypeBuilder>() {
         @Override
-        public void setProperty(String value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
-            buildingPrototypeBuilder.height = getIntValue(value);
+        public void setProperty(JsonElement value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
+            buildingPrototypeBuilder.height = getPropertyValue(value);
         }
     };
 
 
-    private static PropertySetter<BuildingPrototypeBuilder> imagePropertySetter = new FilePropertySetter<BuildingPrototypeBuilder>() {
+    private static PropertySetter<BuildingPrototypeBuilder, File> imagePropertySetter = new FilePropertySetter<BuildingPrototypeBuilder>() {
         @Override
-        public void setProperty(String value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
-            buildingPrototypeBuilder.imageFile = getFileValue(value);
+        public void setProperty(JsonElement value, BuildingPrototypeBuilder buildingPrototypeBuilder) {
+            buildingPrototypeBuilder.imageFile = getPropertyValue(value);
         }
     };
 
-    private static final Map<String, PropertySetter<BuildingPrototypeBuilder>> propertySetters =
-            ImmutableMap.<String, PropertySetter<BuildingPrototypeBuilder>>builder()
+    private static final Map<String, PropertySetter<BuildingPrototypeBuilder, ?>> propertySetters =
+            ImmutableMap.<String, PropertySetter<BuildingPrototypeBuilder, ?>>builder()
             .put("name", namePropertySetter)
             .put("width", widthPropertySetter)
             .put("height", heightPropertySetter)
@@ -54,7 +56,7 @@ public class BuildingPrototypeBuilder implements EntityPrototypeBuilder<Building
             .build();
 
 
-    public void addProperty(String key, String value) {
+    public void addProperty(String key, JsonElement value) {
         if (!propertySetters.containsKey(key)) {
             throw new RuntimeException("Exception occurred setting property [" + key + "]: no setter exists");
         }

@@ -1,4 +1,6 @@
-image=/images/buildings/leatherworker.png
-width=3
-height=3
-name=Leatherworker
+{
+    "image" : "/images/buildings/leatherworker.png",
+    "width" : 3,
+    "height" : 3,
+    "name" : "Leatherworker"
+}

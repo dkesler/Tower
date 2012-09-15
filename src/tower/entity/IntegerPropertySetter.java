@@ -1,14 +1,13 @@
 package tower.entity;
 
-import org.apache.commons.lang3.StringUtils;
-import tower.entity.PropertySetter;
+import com.google.gson.JsonElement;
 
-public abstract class IntegerPropertySetter<T> implements PropertySetter<T> {
-    protected int getIntValue(String value) {
-        if (!StringUtils.isNumeric(value)) {
-            throw new RuntimeException("Exception occurred setting property.  Expected numeric value.  Was [" + value + "]");
+public abstract class IntegerPropertySetter<BUILDER_TYPE> extends PropertySetter<BUILDER_TYPE,Integer> {
+    protected Integer getPropertyValue(JsonElement value) {
+        if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber()) {
+            onUnrecognizedType(this.getClass().getName(), value);
         }
 
-        return Integer.parseInt(value);
+        return value.getAsInt();
     }
 }

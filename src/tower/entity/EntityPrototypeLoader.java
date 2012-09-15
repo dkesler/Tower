@@ -1,10 +1,15 @@
 package tower.entity;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonStreamParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import tower.entity.buiildings.BuildingPrototypeBuilder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,10 +45,24 @@ public class EntityPrototypeLoader<E> {
         return prototypes;
     }
 
+    private JsonStreamParser createParser(File file) {
+        try {
+            return new JsonStreamParser(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not find file [" + file.getName() + "]", e);
+        }
+    }
+
     private void addPrototypeFromFile(File entityFile) {
-        List<String> lines = readFile(entityFile);
+        JsonStreamParser parser = createParser(entityFile);
+
+        if (!parser.hasNext()) {
+            throw new RuntimeException("Tried to load entity file [" + entityFile.getName() + "] with no contents");
+        }
+
         EntityPrototypeBuilder<E> prototypeBuilder = entityPrototypeBuilderFactory.createEntityPrototypeBuilder();
-        processLines(lines, prototypeBuilder);
+        JsonElement next = parser.next();
+        processEntityJson(next.getAsJsonObject(), prototypeBuilder);
         validateAndAddPrototype(entityFile.getName(), prototypeBuilder);
     }
 
@@ -58,31 +77,9 @@ public class EntityPrototypeLoader<E> {
         );
     }
 
-    private void processLines(List<String> lines, EntityPrototypeBuilder<E> entityPrototypeBuilder) {
-        for (String line : lines) {
-            validateLine(line);
-
-            String[] splitLine = line.split("=");
-
-            entityPrototypeBuilder.addProperty(splitLine[0], splitLine[1]);
+    private void processEntityJson(JsonObject entity, EntityPrototypeBuilder<E> entityPrototypeBuilder) {
+        for (Map.Entry<String, JsonElement> entry : entity.entrySet()) {
+            entityPrototypeBuilder.addProperty(entry.getKey(), entry.getValue());
         }
     }
-
-    private void validateLine(String line) {
-        if (StringUtils.isNotBlank(line) && !line.contains("=")) {
-            throw new RuntimeException("Non-blank line [" + line + "] did not contain an equals sign");
-        }
-    }
-
-    private List<String> readFile(File entityFile) {
-        List<String> lines;
-        try {
-            lines = FileUtils.readLines(entityFile);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load entity files", e);
-        }
-        return lines;
-    }
-
-
 }
