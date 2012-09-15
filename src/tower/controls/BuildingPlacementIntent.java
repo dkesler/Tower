@@ -96,7 +96,7 @@ public class BuildingPlacementIntent extends DrawableIntent {
         if (!active && e.getButton() == MouseEvent.BUTTON3) {
             jPanel.add(createBuildingMenu);
             createBuildingMenu.getPopupMenu().show(jPanel, e.getX(), e.getY());
-        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && localMapPanel.within(e.getPoint())) {
+        } else if (e.getButton() == MouseEvent.BUTTON1 && active && isValidPlacement && localMapPanel.contains(e.getPoint())) {
             active = false;
             localMap.addBuilding(new Building(prototype, camera.convertEventToGrid(e)));
         }

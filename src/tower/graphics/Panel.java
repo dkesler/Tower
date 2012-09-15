@@ -80,7 +80,7 @@ public abstract class Panel {
         this.height = height;
     }
 
-    public boolean within(Point2D point) {
+    public boolean contains(Point2D point) {
         return point.getX() >= x && point.getX() <= x + width && point.getY() >= y && point.getY() <= y + height;
     }
 }

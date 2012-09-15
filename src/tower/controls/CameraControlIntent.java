@@ -1,6 +1,7 @@
 package tower.controls;
 
 import tower.graphics.Camera;
+import tower.graphics.LocalMapPanel;
 
 import javax.swing.JPanel;
 import java.awt.Point;
@@ -11,13 +12,15 @@ public class CameraControlIntent extends Intent {
 
     private final Camera camera;
     private final JPanel jPanel;
+    private final LocalMapPanel localMapPanel;
 
     private Point dragStart;
     private boolean dragging = false;
 
-    public CameraControlIntent(Camera camera, JPanel jPanel) {
+    public CameraControlIntent(Camera camera, JPanel jPanel, LocalMapPanel localMapPanel) {
         this.camera = camera;
         this.jPanel = jPanel;
+        this.localMapPanel = localMapPanel;
 
         jPanel.addMouseMotionListener(this);
         jPanel.addMouseListener(this);
@@ -26,7 +29,7 @@ public class CameraControlIntent extends Intent {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
+        if (e.getButton() == MouseEvent.BUTTON1 && localMapPanel.contains(e.getPoint())) {
             dragging = true;
             dragStart = e.getPoint();
         }
@@ -49,6 +52,8 @@ public class CameraControlIntent extends Intent {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        camera.zoom(e.getWheelRotation());
+        if (localMapPanel.contains(e.getPoint())) {
+            camera.zoom(e.getWheelRotation());
+        }
     }
 }

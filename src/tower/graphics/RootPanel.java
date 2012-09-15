@@ -39,12 +39,12 @@ public class RootPanel extends Panel {
         jPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         localMapPanel = new LocalMapPanel();
-        buildingDetailsPanel = new BuildingDetailsPanel();
+        buildingDetailsPanel = new BuildingDetailsPanel(jPanel);
         buildingDetailsPanel.setWidth(200);
         subPanels.add(localMapPanel);
         subPanels.add(buildingDetailsPanel);
 
-        CameraControlIntent cameraControlIntent = new CameraControlIntent(localMapPanel.getCamera(), jPanel);
+        CameraControlIntent cameraControlIntent = new CameraControlIntent(localMapPanel.getCamera(), jPanel, localMapPanel);
         ContextMenuIntent contextMenuIntent = new ContextMenuIntent(jPanel, localMapPanel.getLocalMap(), localMapPanel.getCamera(), localMapPanel);
         ViewBuildingDetailsIntent viewBuildingDetailsIntent = new ViewBuildingDetailsIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), jPanel, buildingDetailsPanel);
         viewBuildingDetailsIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);

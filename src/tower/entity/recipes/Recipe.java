@@ -1,5 +1,6 @@
 package tower.entity.recipes;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import tower.entity.buiildings.BuildingPrototype;
 
@@ -16,5 +17,13 @@ public class Recipe {
         this.location = location;
     }
 
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
 
+        Joiner.on(" + ").appendTo(stringBuilder, reagents);
+        stringBuilder.append(" -> ");
+        Joiner.on(" + ").appendTo(stringBuilder, results);
+
+        return stringBuilder.toString();
+    }
 }

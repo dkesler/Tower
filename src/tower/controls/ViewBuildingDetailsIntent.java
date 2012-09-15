@@ -13,8 +13,6 @@ import java.awt.geom.Point2D;
 
 public class ViewBuildingDetailsIntent extends DrawableIntent {
 
-    private Building selected;
-
     private final LocalMap localMap;
     private final Camera camera;
     private final BuildingDetailsPanel buildingDetailsPanel;
@@ -36,11 +34,14 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
     public void mousePressed(MouseEvent e) {
         if (isActivatable()) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+                Building selected = localMap.getBuildingAt(camera.convertEventToGrid(e));
+
                 if (selected != null) {
+                    buildingDetailsPanel.setSelected(selected);
                     buildingDetailsPanel.setVisible(true);
-                } else {
+                } else if (!buildingDetailsPanel.contains(e.getPoint())) {
                     buildingDetailsPanel.setVisible(false);
+                    buildingDetailsPanel.setSelected(null);
                 }
             }
         }
@@ -48,6 +49,7 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D graphics, Point2D cursor) {
+        Building selected = buildingDetailsPanel.getSelected();
         if (selected != null) {
             graphics.setColor(new Color(255, 255, 255));
 
@@ -62,7 +64,7 @@ public class ViewBuildingDetailsIntent extends DrawableIntent {
                         String.format(
                                 "%-20s %d\n",
                                 itemType,
-                                selected.getStoredItems().get(itemType).size()
+                                selected.getStoredItems().get(itemType)
                         ),
                         x,
                         y
