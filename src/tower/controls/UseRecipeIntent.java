@@ -1,5 +1,6 @@
 package tower.controls;
 
+import tower.entity.buiildings.Building;
 import tower.entity.recipes.Recipe;
 import tower.graphics.BuildingDetailsPanel;
 
@@ -22,14 +23,20 @@ public class UseRecipeIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D graphics, Point2D cursor) {
-        if (buildingDetailsPanel.getSelected() != null) {
-            graphics.setColor(Color.WHITE);
+        Building selected = buildingDetailsPanel.getSelected();
+        if (selected != null) {
+
             int y = buildingDetailsPanel.getY() + 200;
             int x = buildingDetailsPanel.getX() + 5;
 
-            Collection<Recipe> recipes = buildingDetailsPanel.getSelected().getRecipies();
+            Collection<Recipe> recipes = selected.getRecipies();
 
             for (Recipe recipe : recipes) {
+                if (selected.isRecipeUsable(recipe)) {
+                    graphics.setColor(Color.WHITE);
+                } else {
+                    graphics.setColor(Color.GRAY);
+                }
                 graphics.drawString(recipe.toString(), x, y);
                 y += 16;
             }
