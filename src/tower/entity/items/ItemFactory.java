@@ -6,12 +6,17 @@ import java.util.Collection;
 import java.util.Map;
 
 public class ItemFactory {
-    final private static Map<String, ItemPrototype> prototypes = new EntityPrototypeLoader<>(
-            "/details/items",
-            new ItemPrototypeBuilderFactory()
-    ).getPrototypes();
+    private static Map<String, ItemPrototype> prototypes;
 
     private ItemFactory() {}
+
+    public static void initialize() {
+        prototypes = new EntityPrototypeLoader<>(
+                "/details/items",
+                new ItemPrototypeBuilderFactory()
+        ).getPrototypes();
+    }
+
 
     public static Item createByName(String name) {
         ItemPrototype prototype = getPrototype(name);
@@ -22,6 +27,10 @@ public class ItemFactory {
     }
 
     public static ItemPrototype getPrototype(String name) {
+        if (prototypes == null) {
+            throw new RuntimeException("Items not initialized");
+        }
+
         if (!prototypes.containsKey(name)) {
             throw new RuntimeException("No item prototype for [" + name + "]");
         }

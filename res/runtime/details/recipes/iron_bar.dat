@@ -1,2 +1,17 @@
-name=Iron Bar
-formula=Iron Ore
+{
+    "name" : "Iron Ore to Iron Bar",
+    "results" : [
+        {
+            "type" : "Iron Bar",
+            "quantity" : 1
+        }
+    ],
+    "reagents" : [
+        {
+            "type" : "Iron Ore",
+            "quantity" : 2
+        }
+    ],
+    "location" : "Blacksmith"
+}
+
