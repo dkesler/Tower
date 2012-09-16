@@ -5,6 +5,7 @@ import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
 import tower.graphics.MenuPanel;
 import tower.graphics.Panel;
+import tower.graphics.animations.BlinkingRectangle;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -25,8 +26,7 @@ import java.awt.geom.Point2D;
 public class DestroyBuildingIntent extends DrawableIntent {
     private Building selected;
     private boolean isActive;
-    private static final int FRAMES_PER_BLINK = 30;
-    private int frames;
+    private BlinkingRectangle buildingHightlight;
 
     final private LocalMap localMap;
     final private Camera camera;
@@ -49,24 +49,7 @@ public class DestroyBuildingIntent extends DrawableIntent {
     @Override
     public void draw(Graphics2D g2, Point2D cursor) {
         if (isActive) {
-
-            frames++;
-
-            if (frames < FRAMES_PER_BLINK) {
-                DrawingUtils.drawRectangle(
-                        selected.getLocation(),
-                        selected.width(),
-                        selected.height(),
-                        Color.RED,
-                        camera,
-                        g2
-                );
-            }
-
-            if (frames == 2 * FRAMES_PER_BLINK) {
-                frames = 0;
-            }
-
+            buildingHightlight.draw(g2);
             popup.draw(g2, cursor);
         }
     }
@@ -82,6 +65,7 @@ public class DestroyBuildingIntent extends DrawableIntent {
             popup.setX(e.getX());
             popup.setY(e.getY());
             popup.setVisible(true);
+            buildingHightlight = new BlinkingRectangle(selected.getLocation(), selected.width(), selected.height(), camera, Color.RED);
         } else if (isActive) {
             if (popup.contains(e.getPoint())) {
                 if (popup.getSelectedOption(e.getPoint()) != null) {

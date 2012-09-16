@@ -4,6 +4,7 @@ import tower.entity.buiildings.Building;
 import tower.graphics.BuildingDetailsPanel;
 import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
+import tower.graphics.animations.BlinkingRectangle;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -20,8 +21,7 @@ public class SelectBuildingIntent extends DrawableIntent {
     private final Camera camera;
     private final BuildingDetailsPanel buildingDetailsPanel;
 
-    private int frames = 0;
-    private final static int FRAMES_PER_BLINK = 30;
+    private BlinkingRectangle buildingHighlight;
 
     public SelectBuildingIntent(
             LocalMap localMap,
@@ -47,10 +47,11 @@ public class SelectBuildingIntent extends DrawableIntent {
                 if (selected != null) {
                     buildingDetailsPanel.setSelected(selected);
                     buildingDetailsPanel.setVisible(true);
-                    frames = 0;
+                    buildingHighlight = new BlinkingRectangle(selected.getLocation(), selected.height(), selected.width(), camera, Color.GREEN);
                 } else if (!buildingDetailsPanel.contains(e.getPoint())) {
                     buildingDetailsPanel.setVisible(false);
                     buildingDetailsPanel.setSelected(null);
+                    buildingHighlight = null;
                 }
             }
         }
@@ -58,24 +59,8 @@ public class SelectBuildingIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D graphics, Point2D cursor) {
-        Building selected = buildingDetailsPanel.getSelected();
-        if (selected != null) {
-            frames++;
-
-            if (frames < FRAMES_PER_BLINK) {
-                DrawingUtils.drawRectangle(
-                        selected.getLocation(),
-                        selected.width(),
-                        selected.height(),
-                        Color.GREEN,
-                        camera,
-                       graphics
-                );
-            }
-
-            if (frames == 2 * FRAMES_PER_BLINK) {
-                frames = 0;
-            }
+        if (buildingHighlight != null) {
+            buildingHighlight.draw(graphics);
         }
     }
 }
