@@ -25,6 +25,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
     private GridCoord start;
     private GridCoord end;
     private boolean validPlacement;
+    private BlinkingRectangle buildingHighlight;
 
     public PlaceConstructionsIntent(Camera camera, LocalMap localMap) {
         this.camera = camera;
@@ -45,13 +46,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
             );
         } else if (state == PlaceConstructionsState.CONFIRM) {
             validatePlacement(start, end);
-            DrawingUtils.drawRectangle(
-                    start,
-                    end,
-                    validPlacement ? Color.GREEN : Color.RED,
-                    camera,
-                    graphics
-            );
+            buildingHighlight.draw(graphics);
         } else if (state == PlaceConstructionsState.SELECT_END) {
             GridCoord mouseCursor = camera.convertPointToGrid(cursor);
             validatePlacement(start, mouseCursor);
@@ -139,6 +134,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
             if (validPlacement) {
                 state = PlaceConstructionsState.CONFIRM;
                 this.end = end;
+                buildingHighlight = new BlinkingRectangle(new Area(start, end), camera, Color.GREEN);
             }
         }
     }

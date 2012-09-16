@@ -2,15 +2,14 @@ package tower.graphics.animations;
 
 import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
+import tower.grid.Area;
 import tower.grid.GridCoord;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class BlinkingRectangle {
-    private final GridCoord corner;
-    private final int width;
-    private final int height;
+    private final Area area;
     private final Camera camera;
     private final Color color;
     private final int framesPerBlink = 30;
@@ -18,10 +17,8 @@ public class BlinkingRectangle {
     private int frames = 0;
 
 
-    public BlinkingRectangle(GridCoord corner, int width, int height, Camera camera, Color color) {
-        this.corner = corner;
-        this.width = width;
-        this.height = height;
+    public BlinkingRectangle(Area area, Camera camera, Color color) {
+        this.area = area;
         this.camera = camera;
         this.color = color;
     }
@@ -31,9 +28,9 @@ public class BlinkingRectangle {
 
         if (frames < framesPerBlink) {
             DrawingUtils.drawRectangle(
-                    corner,
-                    width,
-                    height,
+                    area.getCorner(),
+                    area.getWidth(),
+                    area.getHeight(),
                     color,
                     camera,
                     graphics

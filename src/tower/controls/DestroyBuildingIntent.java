@@ -53,7 +53,7 @@ public class DestroyBuildingIntent extends DrawableIntent {
             popup.setX(e.getX());
             popup.setY(e.getY());
             popup.setVisible(true);
-            buildingHightlight = new BlinkingRectangle(selected.getLocation(), selected.width(), selected.height(), camera, Color.RED);
+            buildingHightlight = new BlinkingRectangle(selected.getArea(), camera, Color.RED);
         } else if (isActive) {
             if (popup.contains(e.getPoint())) {
                 if (popup.getSelectedOption(e.getPoint()) != null) {

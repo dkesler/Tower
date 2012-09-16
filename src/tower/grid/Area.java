@@ -48,6 +48,18 @@ public class Area {
         return upperLeft.yUnits + height - 1;
     }
 
+    public GridCoord getCorner() {
+        return upperLeft;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public boolean overlaps(Area other) {
         int otherLeftEdge = other.leftEdge();
         int otherRightEdge = other.rightEdge();

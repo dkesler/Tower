@@ -44,7 +44,7 @@ public class SelectBuildingIntent extends DrawableIntent {
                 if (selected != null) {
                     buildingDetailsPanel.setSelected(selected);
                     buildingDetailsPanel.setVisible(true);
-                    buildingHighlight = new BlinkingRectangle(selected.getLocation(), selected.height(), selected.width(), camera, Color.GREEN);
+                    buildingHighlight = new BlinkingRectangle(selected.getArea(), camera, Color.GREEN);
                 } else if (!buildingDetailsPanel.contains(e.getPoint())) {
                     buildingDetailsPanel.setVisible(false);
                     buildingDetailsPanel.setSelected(null);
