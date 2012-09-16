@@ -48,7 +48,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
             validatePlacement(start, end);
             buildingHighlight.draw(graphics);
         } else if (state == PlaceConstructionsState.SELECT_END) {
-            GridCoord mouseCursor = camera.convertPointToGrid(cursor);
+            GridCoord mouseCursor = getEffectivePlacement(cursor);
             validatePlacement(start, mouseCursor);
             DrawingUtils.drawRectangle(
                     start,
@@ -57,6 +57,16 @@ public class PlaceConstructionsIntent extends DrawableIntent {
                     camera,
                     graphics
             );
+        }
+    }
+
+    private GridCoord getEffectivePlacement(Point2D cursor) {
+        GridCoord mouseCoord = camera.convertPointToGrid(cursor);
+
+        if (Math.abs(mouseCoord.xUnits - start.xUnits) > Math.abs(mouseCoord.yUnits - start.yUnits)) {
+            return GridCoord.fromUnits(mouseCoord.xUnits, start.yUnits);
+        } else {
+            return GridCoord.fromUnits(start.xUnits, mouseCoord.yUnits);
         }
     }
 
@@ -129,7 +139,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
                 this.start = start;
             }
         } else if (state == PlaceConstructionsState.SELECT_END) {
-            GridCoord end = camera.convertEventToGrid(e);
+            GridCoord end = getEffectivePlacement(e.getPoint());
             validatePlacement(start, end);
             if (validPlacement) {
                 state = PlaceConstructionsState.CONFIRM;
