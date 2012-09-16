@@ -1,5 +1,6 @@
 package tower.controls;
 
+import tower.entity.buiildings.Building;
 import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
@@ -21,6 +22,7 @@ public class PlaceConstructionsIntent extends DrawableIntent {
     private PlaceConstructionsState state = PlaceConstructionsState.INACTIVE;
     private GridCoord start;
     private GridCoord end;
+    private boolean validPlacement;
 
     public PlaceConstructionsIntent(Camera camera, LocalMap localMap) {
         this.camera = camera;
@@ -31,11 +33,33 @@ public class PlaceConstructionsIntent extends DrawableIntent {
     public void draw(Graphics2D graphics, Point2D cursor) {
         if (state == PlaceConstructionsState.SELECT_START) {
             GridCoord mouseCursor = camera.convertPointToGrid(cursor);
-            DrawingUtils.drawRectangle(mouseCursor, mouseCursor, Color.GREEN, camera, graphics);
+            validatePlacement(mouseCursor, mouseCursor);
+            DrawingUtils.drawRectangle(
+                    mouseCursor,
+                    mouseCursor,
+                    validPlacement ? Color.GREEN : Color.RED,
+                    camera,
+                    graphics
+            );
         } else if (state == PlaceConstructionsState.CONFIRM) {
-            DrawingUtils.drawRectangle(start, end, Color.GREEN, camera, graphics);
+            validatePlacement(start, end);
+            DrawingUtils.drawRectangle(
+                    start,
+                    end,
+                    validPlacement ? Color.GREEN : Color.RED,
+                    camera,
+                    graphics
+            );
         } else if (state == PlaceConstructionsState.SELECT_END) {
-            DrawingUtils.drawRectangle(start, camera.convertPointToGrid(cursor), Color.GREEN, camera, graphics);
+            GridCoord mouseCursor = camera.convertPointToGrid(cursor);
+            validatePlacement(start, mouseCursor);
+            DrawingUtils.drawRectangle(
+                    start,
+                    mouseCursor,
+                    validPlacement ? Color.GREEN : Color.RED,
+                    camera,
+                    graphics
+            );
         }
     }
 
@@ -44,19 +68,46 @@ public class PlaceConstructionsIntent extends DrawableIntent {
         if (e.getKeyChar() == 'c' && state == PlaceConstructionsState.INACTIVE) {
             state = PlaceConstructionsState.SELECT_START;
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER && state == PlaceConstructionsState.CONFIRM) {
-            state = PlaceConstructionsState.INACTIVE;
-            for (int x = Math.min(start.xUnits, end.xUnits); x < Math.max(start.xUnits, end.xUnits) + 1; ++x) {
-                for (int y = Math.min(start.yUnits, end.yUnits); y < Math.max(start.yUnits, end.yUnits) + 1; ++y) {
-                    localMap.addWall(new Wall(GridCoord.fromUnits(x, y)));
+            validatePlacement(start, end);
+            if (validPlacement) {
+                state = PlaceConstructionsState.INACTIVE;
+                for (int x = Math.min(start.xUnits, end.xUnits); x < Math.max(start.xUnits, end.xUnits) + 1; ++x) {
+                    for (int y = Math.min(start.yUnits, end.yUnits); y < Math.max(start.yUnits, end.yUnits) + 1; ++y) {
+                        localMap.addWall(new Wall(GridCoord.fromUnits(x, y)));
+                    }
                 }
+                start = null;
+                end = null;
             }
-            start = null;
-            end = null;
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             state = PlaceConstructionsState.INACTIVE;
             start = null;
             end = null;
         }
+    }
+
+    private void validatePlacement(GridCoord corner1, GridCoord corner2) {
+
+        for (Building building : localMap.getBuildings()) {
+            if (building.overlaps(corner1, corner2)) {
+                validPlacement = false;
+                return;
+            }
+        }
+
+        for (Wall wall : localMap.getWalls()) {
+            if (
+                    wall.getLocation().xUnits >= Math.min(corner1.xUnits, corner2.xUnits)
+                            && wall.getLocation().xUnits <= Math.max(corner1.xUnits, corner2.xUnits)
+                            && wall.getLocation().yUnits >= Math.min(corner1.yUnits, corner2.yUnits)
+                            && wall.getLocation().yUnits <= Math.max(corner1.yUnits, corner2.yUnits)
+                    ) {
+                validPlacement = false;
+                return;
+            }
+        }
+
+        validPlacement = true;
     }
 
     @Override
@@ -78,11 +129,20 @@ public class PlaceConstructionsIntent extends DrawableIntent {
         }
 
         if (state == PlaceConstructionsState.SELECT_START) {
-            state = PlaceConstructionsState.SELECT_END;
-            start = camera.convertEventToGrid(e);
+
+            GridCoord start = camera.convertEventToGrid(e);
+            validatePlacement(start, start);
+            if (validPlacement) {
+                state = PlaceConstructionsState.SELECT_END;
+                this.start = start;
+            }
         } else if (state == PlaceConstructionsState.SELECT_END) {
-            state = PlaceConstructionsState.CONFIRM;
-            end = camera.convertEventToGrid(e);
+            GridCoord end = camera.convertEventToGrid(e);
+            validatePlacement(start, end);
+            if (validPlacement) {
+                state = PlaceConstructionsState.CONFIRM;
+                this.end = end;
+            }
         }
     }
 

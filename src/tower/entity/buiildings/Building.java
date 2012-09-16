@@ -33,7 +33,7 @@ public class Building {
     }
 
     public int rightEdge() {
-        return location.xUnits + prototype.width;
+        return location.xUnits + prototype.width - 1;
     }
 
     public int upperEdge() {
@@ -41,23 +41,45 @@ public class Building {
     }
 
     public int lowerEdge() {
-        return location.yUnits + prototype.height;
+        return location.yUnits + prototype.height - 1;
     }
 
     public GridCoord getLocation() {
         return location;
     }
 
+    public boolean overlaps(GridCoord corner1, GridCoord corner2) {
+        int otherLeftEdge = Math.min(corner1.xUnits, corner2.xUnits);
+        int otherRightEdge = Math.max(corner1.xUnits, corner2.xUnits);
+        int otherUpperEdge = Math.min(corner1.yUnits, corner2.yUnits);
+        int otherLowerEdge = Math.max(corner1.yUnits, corner2.yUnits);
+
+        return overlaps(otherLeftEdge, otherRightEdge, otherLowerEdge, otherUpperEdge);
+    }
+
     public boolean overlaps(Building other) {
-        boolean leftEdgeWithinOther = leftEdge() >= other.leftEdge() && leftEdge() < other.rightEdge();
-        boolean rightEdgeWithinOther = rightEdge() > other.leftEdge() && rightEdge() <= other.rightEdge();
-        boolean horizontalOverlap = leftEdgeWithinOther || rightEdgeWithinOther;
+        int otherLeftEdge = other.leftEdge();
+        int otherRightEdge = other.rightEdge();
+        int otherLowerEdge = other.lowerEdge();
+        int otherUpperEdge = other.upperEdge();
 
-        boolean upperEdgeWithinOther = upperEdge() >= other.upperEdge() && upperEdge() < other.lowerEdge();
-        boolean lowerEdgeWithinOther = lowerEdge() > other.upperEdge() && lowerEdge() <= other.lowerEdge();
-        boolean verticalOverlap = upperEdgeWithinOther || lowerEdgeWithinOther;
+        return overlaps(otherLeftEdge, otherRightEdge, otherLowerEdge, otherUpperEdge);
+    }
 
-        return horizontalOverlap && verticalOverlap;
+    private boolean overlaps(int otherLeftEdge, int otherRightEdge, int otherLowerEdge, int otherUpperEdge) {
+        boolean leftEdgeWithinOther = leftEdge() >= otherLeftEdge && leftEdge() <= otherRightEdge;
+        boolean othersLeftEdgeWithinMe = otherLeftEdge >= leftEdge() && otherLeftEdge <= rightEdge();
+        boolean horizontalOverlap = leftEdgeWithinOther || othersLeftEdgeWithinMe;
+
+        if (!horizontalOverlap) {
+            return false;
+        }
+
+        boolean upperEdgeWithinOther = upperEdge() >= otherUpperEdge && upperEdge() <= otherLowerEdge;
+        boolean othersUpperEdgeWithinMe = otherUpperEdge >= upperEdge() && otherUpperEdge <= lowerEdge();
+        boolean verticalOverlap = upperEdgeWithinOther || othersUpperEdgeWithinMe;
+
+        return verticalOverlap;
     }
 
     public void draw(Graphics2D graphics) {

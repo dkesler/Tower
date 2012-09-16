@@ -51,14 +51,17 @@ public class RootPanel extends Panel {
         contextMenuIntent.attachTo(localMapPanel);
         contextMenuIntent.registerListeners(jPanel);
 
-        SelectBuildingIntent selectBuildingIntent = new SelectBuildingIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), buildingDetailsPanel);
-        selectBuildingIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
-        selectBuildingIntent.attachTo(localMapPanel);
-        selectBuildingIntent.registerListeners(jPanel);
-
         PlaceConstructionsIntent placeConstructionsIntent = new PlaceConstructionsIntent(localMapPanel.getCamera(), localMapPanel.getLocalMap());
         placeConstructionsIntent.registerListeners(jPanel);
         placeConstructionsIntent.attachTo(localMapPanel);
+
+        SelectBuildingIntent selectBuildingIntent = new SelectBuildingIntent(localMapPanel.getLocalMap(), localMapPanel.getCamera(), buildingDetailsPanel);
+        selectBuildingIntent.attachTo(localMapPanel);
+        selectBuildingIntent.registerListeners(jPanel);
+
+        selectBuildingIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
+        selectBuildingIntent.registerIncompatibleIntent(placeConstructionsIntent);
+        contextMenuIntent.registerIncompatibleIntent(placeConstructionsIntent);
 
         initialize(localMapPanel.getLocalMap());
 
