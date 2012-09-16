@@ -3,6 +3,7 @@ package tower.graphics;
 import tower.controls.CameraControlIntent;
 import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
+import tower.controls.PlaceConstructionsIntent;
 import tower.controls.SelectBuildingIntent;
 import tower.entity.buiildings.Building;
 import tower.entity.constructions.Wall;
@@ -54,6 +55,10 @@ public class RootPanel extends Panel {
         selectBuildingIntent.registerIncompatibleIntent(contextMenuIntent.buildingPlacementIntent);
         selectBuildingIntent.attachTo(localMapPanel);
         selectBuildingIntent.registerListeners(jPanel);
+
+        PlaceConstructionsIntent placeConstructionsIntent = new PlaceConstructionsIntent(localMapPanel.getCamera(), localMapPanel.getLocalMap());
+        placeConstructionsIntent.registerListeners(jPanel);
+        placeConstructionsIntent.attachTo(localMapPanel);
 
         initialize(localMapPanel.getLocalMap());
 

@@ -1,5 +1,6 @@
 package tower.graphics;
 
+import tower.controls.PlaceConstructionsIntent;
 import tower.map.LocalMap;
 
 import java.awt.Graphics2D;
