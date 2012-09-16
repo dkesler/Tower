@@ -1,7 +1,6 @@
 package tower.graphics;
 
 import tower.grid.GridCoord;
-import tower.grid.GridUtils;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -27,10 +26,10 @@ public class DrawingUtils {
         graphics.setTransform(camera.getCameraTransform());
         graphics.setColor(color);
         graphics.drawRect(
-                x * GridUtils.UNIT_SIZE,
-                y * GridUtils.UNIT_SIZE,
-                width * GridUtils.UNIT_SIZE,
-                height * GridUtils.UNIT_SIZE
+                x * GridCoord.UNIT_SIZE,
+                y * GridCoord.UNIT_SIZE,
+                width * GridCoord.UNIT_SIZE,
+                height * GridCoord.UNIT_SIZE
         );
         graphics.setTransform(new AffineTransform());
     }

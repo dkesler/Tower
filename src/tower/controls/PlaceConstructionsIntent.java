@@ -4,7 +4,6 @@ import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
 import tower.grid.GridCoord;
-import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
 import javax.swing.JPanel;
@@ -12,7 +11,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class PlaceConstructionsIntent extends DrawableIntent {
