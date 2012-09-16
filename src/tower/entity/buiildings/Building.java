@@ -74,10 +74,7 @@ public class Building {
 
 
     public boolean overlaps(GridCoord gridCoord) {
-        boolean horizontalOverlap = gridCoord.xUnits >= leftEdge() && gridCoord.xUnits < rightEdge();
-        boolean verticalOverlap = gridCoord.yUnits >= upperEdge() && gridCoord.yUnits < lowerEdge();
-
-        return horizontalOverlap && verticalOverlap;
+        return getArea().overlaps(new Area(gridCoord));
     }
 
     public int width() {
