@@ -2,6 +2,7 @@ package tower.controls;
 
 import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
+import tower.graphics.DrawingUtils;
 import tower.grid.GridCoord;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
@@ -31,42 +32,12 @@ public class PlaceConstructionsIntent extends DrawableIntent {
     @Override
     public void draw(Graphics2D graphics, Point2D cursor) {
         if (state == PlaceConstructionsState.SELECT_START) {
-            graphics.setTransform(camera.getCameraTransform());
-            graphics.setColor(new Color(0, 255, 0));
-
             GridCoord mouseCursor = camera.convertPointToGrid(cursor);
-
-            graphics.drawRect(
-                    mouseCursor.xUnits * GridUtils.UNIT_SIZE,
-                    mouseCursor.yUnits * GridUtils.UNIT_SIZE,
-                    GridUtils.UNIT_SIZE,
-                    GridUtils.UNIT_SIZE
-            );
-            graphics.setTransform(new AffineTransform());
+            DrawingUtils.drawRectangle(mouseCursor, mouseCursor, Color.GREEN, camera, graphics);
         } else if (state == PlaceConstructionsState.CONFIRM) {
-            graphics.setTransform(camera.getCameraTransform());
-            graphics.setColor(new Color(0, 255, 0));
-
-            graphics.drawRect(
-                    Math.min(start.xUnits, end.xUnits) * GridUtils.UNIT_SIZE,
-                    Math.min(start.yUnits, end.yUnits) * GridUtils.UNIT_SIZE,
-                    (Math.abs(start.xUnits - end.xUnits) + 1) * GridUtils.UNIT_SIZE,
-                    (Math.abs(start.yUnits - end.yUnits) + 1) * GridUtils.UNIT_SIZE
-            );
-            graphics.setTransform(new AffineTransform());
+            DrawingUtils.drawRectangle(start, end, Color.GREEN, camera, graphics);
         } else if (state == PlaceConstructionsState.SELECT_END) {
-            graphics.setTransform(camera.getCameraTransform());
-            graphics.setColor(new Color(0, 255, 0));
-
-            GridCoord mouseCursor = camera.convertPointToGrid(cursor);
-
-            graphics.drawRect(
-                    Math.min(start.xUnits, mouseCursor.xUnits) * GridUtils.UNIT_SIZE,
-                    Math.min(start.yUnits, mouseCursor.yUnits) * GridUtils.UNIT_SIZE,
-                    (Math.abs(start.xUnits - mouseCursor.xUnits) + 1) * GridUtils.UNIT_SIZE,
-                    (Math.abs(start.yUnits - mouseCursor.yUnits) + 1) * GridUtils.UNIT_SIZE
-            );
-            graphics.setTransform(new AffineTransform());
+            DrawingUtils.drawRectangle(start, camera.convertPointToGrid(cursor), Color.GREEN, camera, graphics);
         }
     }
 

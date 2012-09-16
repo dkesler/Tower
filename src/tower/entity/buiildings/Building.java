@@ -1,10 +1,6 @@
 package tower.entity.buiildings;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import tower.entity.constructions.Wall;
 import tower.entity.items.Item;
-import tower.entity.items.ItemPrototype;
 import tower.entity.recipes.ItemQuantity;
 import tower.entity.recipes.Recipe;
 import tower.entity.recipes.Recipes;
@@ -13,7 +9,6 @@ import tower.grid.GridCoord;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +16,11 @@ import java.util.Map;
 public class Building {
 
     final private BuildingPrototype prototype;
-    final private GridCoord gridCoord;
+    final private GridCoord location;
     final private Map<String, Integer> items = new HashMap<>();
 
-    public Building(BuildingPrototype prototype, GridCoord gridCoord) {
-        this.gridCoord = gridCoord;
+    public Building(BuildingPrototype prototype, GridCoord location) {
+        this.location = location;
         this.prototype = prototype;
     }
 
@@ -34,19 +29,23 @@ public class Building {
     }
 
     public int leftEdge() {
-        return gridCoord.xUnits;
+        return location.xUnits;
     }
 
     public int rightEdge() {
-        return gridCoord.xUnits + prototype.width;
+        return location.xUnits + prototype.width;
     }
 
     public int upperEdge() {
-        return gridCoord.yUnits;
+        return location.yUnits;
     }
 
     public int lowerEdge() {
-        return gridCoord.yUnits + prototype.height;
+        return location.yUnits + prototype.height;
+    }
+
+    public GridCoord getLocation() {
+        return location;
     }
 
     public boolean overlaps(Building other) {
@@ -68,8 +67,8 @@ public class Building {
                         AffineTransform.getScaleInstance(.25, .25),
                         AffineTransformOp.TYPE_NEAREST_NEIGHBOR
                 ),
-                gridCoord.xPixels,
-                gridCoord.yPixels
+                location.xPixels,
+                location.yPixels
         );
     }
 

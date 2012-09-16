@@ -2,6 +2,7 @@ package tower.controls;
 
 import tower.entity.buiildings.Building;
 import tower.graphics.Camera;
+import tower.graphics.DrawingUtils;
 import tower.graphics.MenuPanel;
 import tower.graphics.Panel;
 import tower.grid.GridUtils;
@@ -52,16 +53,14 @@ public class DestroyBuildingIntent extends DrawableIntent {
             frames++;
 
             if (frames < FRAMES_PER_BLINK) {
-                g2.setTransform(camera.getCameraTransform());
-                g2.setColor(new Color(255, 0, 0));
-
-                g2.drawRect(
-                        selected.leftEdge() * GridUtils.UNIT_SIZE,
-                        selected.upperEdge() * GridUtils.UNIT_SIZE,
-                        selected.width() * GridUtils.UNIT_SIZE,
-                        selected.height() * GridUtils.UNIT_SIZE
+                DrawingUtils.drawRectangle(
+                        selected.getLocation(),
+                        selected.width(),
+                        selected.height(),
+                        Color.RED,
+                        camera,
+                        g2
                 );
-                g2.setTransform(new AffineTransform());
             }
 
             if (frames == 2 * FRAMES_PER_BLINK) {

@@ -5,16 +5,15 @@ import tower.entity.buiildings.BuildingFactory;
 import tower.entity.buiildings.BuildingPrototype;
 import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
+import tower.graphics.DrawingUtils;
 import tower.graphics.MenuPanel;
 import tower.grid.GridCoord;
-import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class BuildingPlacementIntent extends DrawableIntent {
@@ -38,23 +37,15 @@ public class BuildingPlacementIntent extends DrawableIntent {
 
     @Override
     public void draw(Graphics2D g2, Point2D cursor) {
-        if (active)
-        {
-            g2.setTransform(camera.getCameraTransform());
-            GridCoord cursorOnGrid = camera.convertPointToGrid(cursor);
-            if (isValidPlacement) {
-                g2.setColor(new Color(0, 255, 0));
-            } else {
-                g2.setColor(new Color(255, 0, 0));
-            }
-            g2.drawRect(
-                    cursorOnGrid.xPixels,
-                    cursorOnGrid.yPixels,
-                    prototype.width * GridUtils.UNIT_SIZE,
-                    prototype.height * GridUtils.UNIT_SIZE
+        if (active) {
+            DrawingUtils.drawRectangle(
+                    camera.convertPointToGrid(cursor),
+                    prototype.width,
+                    prototype.height,
+                    isValidPlacement ? Color.GREEN : Color.RED,
+                    camera,
+                    g2
             );
-
-            g2.setTransform(new AffineTransform());
         }
         menuPanel.draw(g2, cursor);
     }

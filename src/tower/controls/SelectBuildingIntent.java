@@ -3,6 +3,7 @@ package tower.controls;
 import tower.entity.buiildings.Building;
 import tower.graphics.BuildingDetailsPanel;
 import tower.graphics.Camera;
+import tower.graphics.DrawingUtils;
 import tower.grid.GridUtils;
 import tower.map.LocalMap;
 
@@ -62,16 +63,14 @@ public class SelectBuildingIntent extends DrawableIntent {
             frames++;
 
             if (frames < FRAMES_PER_BLINK) {
-                graphics.setTransform(camera.getCameraTransform());
-                graphics.setColor(new Color(0, 255, 0));
-
-                graphics.drawRect(
-                        selected.leftEdge() * GridUtils.UNIT_SIZE,
-                        selected.upperEdge() * GridUtils.UNIT_SIZE,
-                        selected.width() * GridUtils.UNIT_SIZE,
-                        selected.height() * GridUtils.UNIT_SIZE
+                DrawingUtils.drawRectangle(
+                        selected.getLocation(),
+                        selected.width(),
+                        selected.height(),
+                        Color.GREEN,
+                        camera,
+                       graphics
                 );
-                graphics.setTransform(new AffineTransform());
             }
 
             if (frames == 2 * FRAMES_PER_BLINK) {
