@@ -5,6 +5,8 @@ import tower.controls.ContextMenuIntent;
 import tower.controls.CursorTrackingIntent;
 import tower.controls.SelectBuildingIntent;
 import tower.entity.buiildings.Building;
+import tower.entity.constructions.Wall;
+import tower.grid.GridCoord;
 import tower.map.LocalMap;
 import tower.saves.SaveParser;
 
@@ -63,6 +65,10 @@ public class RootPanel extends Panel {
         for (Building building : saveParser.getBuildings()) {
             localMap.addBuilding(building);
         }
+
+        localMap.addWall(new Wall(GridCoord.fromUnits(4, 6)));
+        localMap.addWall(new Wall(GridCoord.fromUnits(5, 6)));
+        localMap.addWall(new Wall(GridCoord.fromUnits(6, 6)));
     }
 
     public JPanel getjPanel() {

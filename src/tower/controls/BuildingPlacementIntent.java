@@ -3,6 +3,7 @@ package tower.controls;
 import tower.entity.buiildings.Building;
 import tower.entity.buiildings.BuildingFactory;
 import tower.entity.buiildings.BuildingPrototype;
+import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
 import tower.graphics.MenuPanel;
 import tower.grid.GridCoord;
@@ -62,6 +63,13 @@ public class BuildingPlacementIntent extends DrawableIntent {
         Building candidate = new Building(prototype, gridCoord);
         for (Building building : localMap.getBuildings()) {
             if (candidate.overlaps(building)) {
+                isValidPlacement = false;
+                return;
+            }
+        }
+
+        for (Wall wall : localMap.getWalls()) {
+            if (candidate.overlaps(wall.getLocation())) {
                 isValidPlacement = false;
                 return;
             }
