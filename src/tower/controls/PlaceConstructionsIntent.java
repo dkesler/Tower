@@ -4,6 +4,8 @@ import tower.entity.buiildings.Building;
 import tower.entity.constructions.Wall;
 import tower.graphics.Camera;
 import tower.graphics.DrawingUtils;
+import tower.graphics.animations.BlinkingRectangle;
+import tower.grid.Area;
 import tower.grid.GridCoord;
 import tower.map.LocalMap;
 
@@ -89,19 +91,14 @@ public class PlaceConstructionsIntent extends DrawableIntent {
     private void validatePlacement(GridCoord corner1, GridCoord corner2) {
 
         for (Building building : localMap.getBuildings()) {
-            if (building.overlaps(corner1, corner2)) {
+            if (building.overlaps(new Area(corner1, corner2))) {
                 validPlacement = false;
                 return;
             }
         }
 
         for (Wall wall : localMap.getWalls()) {
-            if (
-                    wall.getLocation().xUnits >= Math.min(corner1.xUnits, corner2.xUnits)
-                            && wall.getLocation().xUnits <= Math.max(corner1.xUnits, corner2.xUnits)
-                            && wall.getLocation().yUnits >= Math.min(corner1.yUnits, corner2.yUnits)
-                            && wall.getLocation().yUnits <= Math.max(corner1.yUnits, corner2.yUnits)
-                    ) {
+            if (wall.overlaps(new Area(corner1, corner2))) {
                 validPlacement = false;
                 return;
             }

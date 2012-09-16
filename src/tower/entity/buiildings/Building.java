@@ -4,6 +4,7 @@ import tower.entity.items.Item;
 import tower.entity.recipes.ItemQuantity;
 import tower.entity.recipes.Recipe;
 import tower.entity.recipes.Recipes;
+import tower.grid.Area;
 import tower.grid.GridCoord;
 
 import java.awt.Graphics2D;
@@ -47,39 +48,16 @@ public class Building {
     public GridCoord getLocation() {
         return location;
     }
-
-    public boolean overlaps(GridCoord corner1, GridCoord corner2) {
-        int otherLeftEdge = Math.min(corner1.xUnits, corner2.xUnits);
-        int otherRightEdge = Math.max(corner1.xUnits, corner2.xUnits);
-        int otherUpperEdge = Math.min(corner1.yUnits, corner2.yUnits);
-        int otherLowerEdge = Math.max(corner1.yUnits, corner2.yUnits);
-
-        return overlaps(otherLeftEdge, otherRightEdge, otherLowerEdge, otherUpperEdge);
+    public boolean overlaps(Area other) {
+        return getArea().overlaps(other);
     }
 
     public boolean overlaps(Building other) {
-        int otherLeftEdge = other.leftEdge();
-        int otherRightEdge = other.rightEdge();
-        int otherLowerEdge = other.lowerEdge();
-        int otherUpperEdge = other.upperEdge();
-
-        return overlaps(otherLeftEdge, otherRightEdge, otherLowerEdge, otherUpperEdge);
+        return getArea().overlaps(other.getArea());
     }
 
-    private boolean overlaps(int otherLeftEdge, int otherRightEdge, int otherLowerEdge, int otherUpperEdge) {
-        boolean leftEdgeWithinOther = leftEdge() >= otherLeftEdge && leftEdge() <= otherRightEdge;
-        boolean othersLeftEdgeWithinMe = otherLeftEdge >= leftEdge() && otherLeftEdge <= rightEdge();
-        boolean horizontalOverlap = leftEdgeWithinOther || othersLeftEdgeWithinMe;
-
-        if (!horizontalOverlap) {
-            return false;
-        }
-
-        boolean upperEdgeWithinOther = upperEdge() >= otherUpperEdge && upperEdge() <= otherLowerEdge;
-        boolean othersUpperEdgeWithinMe = otherUpperEdge >= upperEdge() && otherUpperEdge <= lowerEdge();
-        boolean verticalOverlap = upperEdgeWithinOther || othersUpperEdgeWithinMe;
-
-        return verticalOverlap;
+    public Area getArea() {
+        return new Area(location, prototype.width, prototype.height);
     }
 
     public void draw(Graphics2D graphics) {

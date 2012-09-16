@@ -1,6 +1,7 @@
 package tower.entity.constructions;
 
 import tower.entity.buiildings.Building;
+import tower.grid.Area;
 import tower.grid.GridCoord;
 
 import java.awt.Graphics2D;
@@ -30,5 +31,9 @@ public class Wall {
 
     public GridCoord getLocation() {
         return position;
+    }
+
+    public boolean overlaps(Area area) {
+        return new Area(position).overlaps(area);
     }
 }
